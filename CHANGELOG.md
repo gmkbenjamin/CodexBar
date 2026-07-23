@@ -5,6 +5,10 @@
 ### Fixed
 - Ollama: reuse validated browser sessions across refreshes, and skip inaccessible Safari cookies during automatic
   fallback while preserving explicit Safari permission guidance.
+- Cursor: keep cookie/session caches in process when “Disable Keychain access” is on, so refreshes no longer fail
+  with “Cursor session changed during refresh”.
+- Cursor/Keychain: clear the in-process cookie cache whenever Keychain access is toggled so disabled-mode sessions
+  cannot resurface later.
 
 ## 0.45.2 — 2026-07-19
 
