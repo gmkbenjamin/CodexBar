@@ -534,11 +534,30 @@ enum CLIRenderer {
         let reset = detailBacked
             ? self.resetLineForDetailBackedWindow(window: window, style: resetStyle, now: now)
             : self.resetLine(for: window, style: resetStyle, now: now)
+        let upcoming = CodexBarCLI.showUpcomingResetsFromDefaults()
+            ? UsageFormatter.upcomingResetsLine(
+                for: detailBacked
+                    ? RateWindow(
+                        usedPercent: window.usedPercent,
+                        windowMinutes: window.windowMinutes,
+                        resetsAt: window.resetsAt,
+                        resetDescription: nil)
+                    : window,
+                style: resetStyle,
+                now: now)
+            : nil
+        let resetText: String? = if let reset, let upcoming {
+            "⏳ \(reset)\n\(upcoming)"
+        } else if let reset {
+            "⏳ \(reset)"
+        } else {
+            nil
+        }
         let detailText = detailBacked ? self.detailLineForDetailBackedWindow(window: window) : nil
         return CLICardMetric(
             label: label,
             remainingPercent: window.remainingPercent,
-            resetText: reset.map { "⏳ \($0)" },
+            resetText: resetText,
             resetAt: window.resetsAt,
             detailText: detailText)
     }
@@ -1018,6 +1037,18 @@ enum CLIRenderer {
         if self.usesDetailBackedWindow(provider: provider) {
             if let reset = self.resetLineForDetailBackedWindow(window: window, style: context.resetStyle, now: now) {
                 lines.append(self.subtleLine(reset, useColor: context.useColor))
+                if CodexBarCLI.showUpcomingResetsFromDefaults(),
+                   let upcoming = UsageFormatter.upcomingResetsLine(
+                       for: RateWindow(
+                           usedPercent: window.usedPercent,
+                           windowMinutes: window.windowMinutes,
+                           resetsAt: window.resetsAt,
+                           resetDescription: nil),
+                       style: context.resetStyle,
+                       now: now)
+                {
+                    lines.append(self.subtleLine(upcoming, useColor: context.useColor))
+                }
             }
             if let detail = self.detailLineForDetailBackedWindow(window: window) {
                 lines.append(self.subtleLine(detail, useColor: context.useColor))
@@ -1027,6 +1058,11 @@ enum CLIRenderer {
 
         if let reset = self.resetLine(for: window, style: context.resetStyle, now: now) {
             lines.append(self.subtleLine(reset, useColor: context.useColor))
+            if CodexBarCLI.showUpcomingResetsFromDefaults(),
+               let upcoming = UsageFormatter.upcomingResetsLine(for: window, style: context.resetStyle, now: now)
+            {
+                lines.append(self.subtleLine(upcoming, useColor: context.useColor))
+            }
         }
     }
 

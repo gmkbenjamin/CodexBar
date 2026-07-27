@@ -1,0 +1,8 @@
+== Claude 2.1.220 (claude) ==
+Session: 100% left [============]
+Pace: 8% in reserve | Expected 8% used | Lasts until reset
+Resets tomorrow, 3:00 AM
+Then Tue, Jul 28 at 8:00 AM · Tue, Jul 28 at 1:00 PM · Tue, Jul 28 at 6:00 PM
+Weekly: 0% left [------------]
+Resets Jul 29 at 5:00 PM
+Then Wed, Aug 5 at 5:00 PM · Wed, Aug 12 at 5:00 PM · Wed, Aug 19 at 5:00 PM

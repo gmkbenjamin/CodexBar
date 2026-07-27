@@ -170,6 +170,19 @@ extension CodexBarCLI {
         return fallback ? .absolute : .countdown
     }
 
+    static func showUpcomingResetsFromDefaults() -> Bool {
+        let domains = [
+            "com.steipete.codexbar",
+            "com.steipete.codexbar.debug",
+        ]
+        for domain in domains {
+            if let value = UserDefaults(suiteName: domain)?.object(forKey: "showUpcomingResets") as? Bool {
+                return value
+            }
+        }
+        return UserDefaults.standard.object(forKey: "showUpcomingResets") as? Bool ?? false
+    }
+
     static func weeklyProgressWorkDaysFromDefaults() -> Int? {
         let domains = [
             "com.steipete.codexbar",
