@@ -187,7 +187,11 @@ public enum UsageFormatter {
     ///
     /// Returns up to `count` boundaries starting at `resetsAt` (or the next future step when that
     /// timestamp is already past), advancing by `windowMinutes`. Empty when cadence is unknown,
-    /// the window is a synthetic placeholder, or `count` is non-positive.
+    /// the window is not a fixed rolling quota, the window is a synthetic placeholder, or `count`
+    /// is non-positive.
+    ///
+    /// Billing-cycle windows also populate `windowMinutes` (Cursor/Grok/Abacus and many monthly
+    /// plans), but the next period is calendar/provider-owned — do not extrapolate those.
     public static func upcomingResetDates(
         for window: RateWindow,
         count: Int = 4,
@@ -197,7 +201,7 @@ public enum UsageFormatter {
               !window.isSyntheticPlaceholder,
               let resetsAt = window.resetsAt,
               let windowMinutes = window.windowMinutes,
-              windowMinutes > 0
+              self.isProjectableRollingWindow(minutes: windowMinutes)
         else {
             return []
         }
@@ -217,6 +221,20 @@ public enum UsageFormatter {
             cursor = cursor.addingTimeInterval(step)
         }
         return dates
+    }
+
+    /// Fixed rolling cadences that safely repeat from the reported `resetsAt`.
+    public static func isProjectableRollingWindow(minutes: Int) -> Bool {
+        switch minutes {
+        case 60, // 1-hour rolling
+             4 * 60, // 4-hour rolling
+             5 * 60, // 5-hour session
+             24 * 60, // daily rolling
+             7 * 24 * 60: // weekly
+            true
+        default:
+            false
+        }
     }
 
     /// Compact schedule of resets after the immediate next one (already shown via `resetLine`).

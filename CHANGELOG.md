@@ -7,7 +7,7 @@
 - Menu: the compact multi-account layout now covers every stacked multi-account list — token accounts on any provider and Codex accounts (flat lists; workspace-grouped Codex lists keep their sections).
 
 ### Added
-- Menu: add an opt-in upcoming resets schedule for rolling quotas, following the Reset times countdown/date style.
+- Menu: add an opt-in upcoming resets schedule for fixed rolling quotas (1h/4h/5h/daily/weekly), following the Reset times countdown/date style.
 
 ### Fixed
 - Menu: switching provider tabs no longer flashes. The sibling-tab warmup now runs off a tracking-safe timer (the previous Task-based warmup never fired while the menu was open, which is the only time it matters), and provider tabs share one stable menu height via an invisible spacer, so a switch is a single-frame content swap with no window resize. Verified frame-by-frame with a new env-gated self-probe (`CODEXBAR_FLICKER_PROBE_DIR`).
