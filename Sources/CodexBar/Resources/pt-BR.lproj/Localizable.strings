@@ -567,12 +567,12 @@
 "usage_bars_fill_remaining" = "Como restante";
 "usage_bars_fill_used" = "Como consumido";
 "reset_times_title" = "Horários de renovação";
-"reset_times_subtitle" = "Countdown or date & time for the next reset and estimated upcoming resets.";
+"reset_times_subtitle" = "Contagem regressiva ou data e hora para a próxima renovação e as renovações estimadas seguintes.";
 "reset_times_countdown" = "Contagem regressiva";
-"reset_times_clock" = "Horário";
-"show_upcoming_resets_title" = "Show upcoming resets";
-"show_upcoming_resets_subtitle" = "Estimate the next few reset times for fixed rolling quotas (1h, 4h, 5h, daily, weekly). Billing periods are not projected. Uses the Reset times style above.";
-"Then %@" = "Then %@";
+"reset_times_clock" = "Data e hora";
+"show_upcoming_resets_title" = "Mostrar próximas renovações";
+"show_upcoming_resets_subtitle" = "Estima os próximos horários de renovação para cotas móveis fixas (1h, 4h, 5h, diária, semanal). Períodos de cobrança não são projetados. Usa o estilo de «Horários de renovação» acima.";
+"Then %@" = "Depois %@";
 "cost_summary_title" = "Resumo de custos";
 "cost_summary_off" = "Desativado";
 "merge_icons_title" = "Mesclar Ícones";

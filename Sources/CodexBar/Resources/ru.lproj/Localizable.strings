@@ -571,12 +571,12 @@
 "usage_bars_fill_remaining" = "По остатку";
 "usage_bars_fill_used" = "По расходу";
 "reset_times_title" = "Время сброса";
-"reset_times_subtitle" = "Countdown or date & time for the next reset and estimated upcoming resets.";
+"reset_times_subtitle" = "Обратный отсчёт или дата и время следующего сброса и оценочных следующих сбросов.";
 "reset_times_countdown" = "Обратный отсчёт";
-"reset_times_clock" = "Точное время";
-"show_upcoming_resets_title" = "Show upcoming resets";
-"show_upcoming_resets_subtitle" = "Estimate the next few reset times for fixed rolling quotas (1h, 4h, 5h, daily, weekly). Billing periods are not projected. Uses the Reset times style above.";
-"Then %@" = "Then %@";
+"reset_times_clock" = "Дата и время";
+"show_upcoming_resets_title" = "Показывать ближайшие сбросы";
+"show_upcoming_resets_subtitle" = "Оценивает несколько следующих времён сброса для фиксированных скользящих квот (1ч, 4ч, 5ч, сутки, неделя). Расчётные периоды не проецируются. Использует стиль «Время сброса» выше.";
+"Then %@" = "Затем %@";
 "cost_summary_title" = "Сводка расходов";
 "cost_summary_off" = "Выкл.";
 "merge_icons_title" = "Объединять значки";

@@ -566,12 +566,12 @@
 "usage_bars_fill_remaining" = "Theo mức còn lại";
 "usage_bars_fill_used" = "Theo mức đã sử dụng";
 "reset_times_title" = "Thời gian đặt lại";
-"reset_times_subtitle" = "Countdown or date & time for the next reset and estimated upcoming resets.";
+"reset_times_subtitle" = "Đếm ngược hoặc ngày & giờ cho lần đặt lại tiếp theo và các lần đặt lại ước tính sau đó.";
 "reset_times_countdown" = "Đếm ngược";
-"reset_times_clock" = "Mốc giờ";
-"show_upcoming_resets_title" = "Show upcoming resets";
-"show_upcoming_resets_subtitle" = "Estimate the next few reset times for fixed rolling quotas (1h, 4h, 5h, daily, weekly). Billing periods are not projected. Uses the Reset times style above.";
-"Then %@" = "Then %@";
+"reset_times_clock" = "Ngày & giờ";
+"show_upcoming_resets_title" = "Hiện các lần đặt lại sắp tới";
+"show_upcoming_resets_subtitle" = "Ước tính vài lần đặt lại tiếp theo cho hạn mức cuốn cố định (1 giờ, 4 giờ, 5 giờ, hàng ngày, hàng tuần). Không chiếu kỳ thanh toán. Dùng kiểu «Thời gian đặt lại» ở trên.";
+"Then %@" = "Sau đó %@";
 "cost_summary_title" = "Tóm tắt chi phí";
 "cost_summary_off" = "Tắt";
 "merge_icons_title" = "Hợp nhất các biểu tượng";

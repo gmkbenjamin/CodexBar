@@ -554,12 +554,12 @@
 "usage_bars_fill_remaining" = "Com a restant";
 "usage_bars_fill_used" = "Com a consumit";
 "reset_times_title" = "Hores de reinici";
-"reset_times_subtitle" = "Countdown or date & time for the next reset and estimated upcoming resets.";
+"reset_times_subtitle" = "Compte enrere o data i hora per al proper reinici i els reinicis estimats posteriors.";
 "reset_times_countdown" = "Compte enrere";
-"reset_times_clock" = "Hora del rellotge";
-"show_upcoming_resets_title" = "Show upcoming resets";
-"show_upcoming_resets_subtitle" = "Estimate the next few reset times for fixed rolling quotas (1h, 4h, 5h, daily, weekly). Billing periods are not projected. Uses the Reset times style above.";
-"Then %@" = "Then %@";
+"reset_times_clock" = "Data i hora";
+"show_upcoming_resets_title" = "Mostra els propers reinicis";
+"show_upcoming_resets_subtitle" = "Estima les properes hores de reinici per a quotes mòbils fixes (1 h, 4 h, 5 h, diària, setmanal). Els períodes de facturació no es projecten. Usa l’estil de «Hores de reinici» de dalt.";
+"Then %@" = "Després %@";
 "cost_summary_title" = "Resum de cost";
 "cost_summary_off" = "Desactivat";
 "merge_icons_title" = "Combina les icones";

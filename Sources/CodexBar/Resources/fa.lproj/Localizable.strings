@@ -576,12 +576,12 @@
 "usage_bars_fill_remaining" = "بر اساس باقی‌مانده";
 "usage_bars_fill_used" = "بر اساس استفاده‌شده";
 "reset_times_title" = "زمان‌های بازنشانی";
-"reset_times_subtitle" = "Countdown or date & time for the next reset and estimated upcoming resets.";
+"reset_times_subtitle" = "شمارش معکوس یا تاریخ و زمان برای بازنشانی بعدی و بازنشانی‌های تخمینی بعدی.";
 "reset_times_countdown" = "شمارش معکوس";
-"reset_times_clock" = "ساعت";
-"show_upcoming_resets_title" = "Show upcoming resets";
-"show_upcoming_resets_subtitle" = "Estimate the next few reset times for fixed rolling quotas (1h, 4h, 5h, daily, weekly). Billing periods are not projected. Uses the Reset times style above.";
-"Then %@" = "Then %@";
+"reset_times_clock" = "تاریخ و زمان";
+"show_upcoming_resets_title" = "نمایش بازنشانی‌های پیشِ رو";
+"show_upcoming_resets_subtitle" = "چند زمان بازنشانی بعدی را برای سهمیه‌های غلتان ثابت (۱س، ۴س، ۵س، روزانه، هفتگی) تخمین می‌زند. دوره‌های صورتحساب پیش‌بینی نمی‌شوند. از سبک «زمان‌های بازنشانی» بالا استفاده می‌کند.";
+"Then %@" = "سپس %@";
 "cost_summary_title" = "خلاصه هزینه";
 "cost_summary_off" = "خاموش";
 "merge_icons_title" = "آیکون های ادغام";

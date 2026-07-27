@@ -576,12 +576,12 @@
 "usage_bars_fill_remaining" = "حسب المتبقي";
 "usage_bars_fill_used" = "حسب المستهلك";
 "reset_times_title" = "أوقات إعادة التعيين";
-"reset_times_subtitle" = "Countdown or date & time for the next reset and estimated upcoming resets.";
+"reset_times_subtitle" = "عدّ تنازلي أو تاريخ ووقت لإعادة التعيين التالية وإعادات التعيين المقدَّرة اللاحقة.";
 "reset_times_countdown" = "العد التنازلي";
-"reset_times_clock" = "وقت الساعة";
-"show_upcoming_resets_title" = "Show upcoming resets";
-"show_upcoming_resets_subtitle" = "Estimate the next few reset times for fixed rolling quotas (1h, 4h, 5h, daily, weekly). Billing periods are not projected. Uses the Reset times style above.";
-"Then %@" = "Then %@";
+"reset_times_clock" = "التاريخ والوقت";
+"show_upcoming_resets_title" = "إظهار إعادات التعيين القادمة";
+"show_upcoming_resets_subtitle" = "يقدّر أوقات إعادة التعيين التالية للحصص المتدحرجة الثابتة (ساعة، 4 ساعات، 5 ساعات، يومي، أسبوعي). لا تُسقَط فترات الفوترة. يستخدم نمط «أوقات إعادة التعيين» أعلاه.";
+"Then %@" = "ثم %@";
 "cost_summary_title" = "ملخص التكلفة";
 "cost_summary_off" = "إيقاف";
 "merge_icons_title" = "أيقونات الدمج";

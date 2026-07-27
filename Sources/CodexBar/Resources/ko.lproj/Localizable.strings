@@ -559,12 +559,12 @@
 "usage_bars_fill_remaining" = "남은 양 기준";
 "usage_bars_fill_used" = "사용량 기준";
 "reset_times_title" = "재설정 시간";
-"reset_times_subtitle" = "Countdown or date & time for the next reset and estimated upcoming resets.";
+"reset_times_subtitle" = "다음 재설정과 예상되는 이후 재설정을 카운트다운 또는 날짜와 시간으로 표시합니다.";
 "reset_times_countdown" = "카운트다운";
-"reset_times_clock" = "시각";
-"show_upcoming_resets_title" = "Show upcoming resets";
-"show_upcoming_resets_subtitle" = "Estimate the next few reset times for fixed rolling quotas (1h, 4h, 5h, daily, weekly). Billing periods are not projected. Uses the Reset times style above.";
-"Then %@" = "Then %@";
+"reset_times_clock" = "날짜 및 시간";
+"show_upcoming_resets_title" = "예정된 재설정 표시";
+"show_upcoming_resets_subtitle" = "고정 롤링 할당량(1시간, 4시간, 5시간, 일간, 주간)의 다음 몇 번 재설정 시각을 추정합니다. 청구 기간은 투영하지 않습니다. 위의 «재설정 시간» 스타일을 사용합니다.";
+"Then %@" = "이후 %@";
 "cost_summary_title" = "비용 요약";
 "cost_summary_off" = "끔";
 "merge_icons_title" = "아이콘 병합";

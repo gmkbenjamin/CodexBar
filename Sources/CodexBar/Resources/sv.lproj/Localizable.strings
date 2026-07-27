@@ -569,12 +569,12 @@
 "usage_bars_fill_remaining" = "Återstående";
 "usage_bars_fill_used" = "Förbrukat";
 "reset_times_title" = "Återställningstider";
-"reset_times_subtitle" = "Countdown or date & time for the next reset and estimated upcoming resets.";
+"reset_times_subtitle" = "Nedräkning eller datum & tid för nästa återställning och uppskattade följande återställningar.";
 "reset_times_countdown" = "Nedräkning";
-"reset_times_clock" = "Klockslag";
-"show_upcoming_resets_title" = "Show upcoming resets";
-"show_upcoming_resets_subtitle" = "Estimate the next few reset times for fixed rolling quotas (1h, 4h, 5h, daily, weekly). Billing periods are not projected. Uses the Reset times style above.";
-"Then %@" = "Then %@";
+"reset_times_clock" = "Datum & tid";
+"show_upcoming_resets_title" = "Visa kommande återställningar";
+"show_upcoming_resets_subtitle" = "Uppskattar de närmaste återställningstiderna för fasta rullande kvoter (1h, 4h, 5h, daglig, veckovis). Faktureringsperioder projiceras inte. Använder stilen för «Återställningstider» ovan.";
+"Then %@" = "Sedan %@";
 "cost_summary_title" = "Kostnadssammanfattning";
 "cost_summary_off" = "Av";
 "merge_icons_title" = "Slå ihop ikoner";
