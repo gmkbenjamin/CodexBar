@@ -576,12 +576,12 @@
 "usage_bars_fill_remaining" = "Kalan miktara göre";
 "usage_bars_fill_used" = "Harcanan miktara göre";
 "reset_times_title" = "Sıfırlama zamanları";
-"reset_times_subtitle" = "Countdown or date & time for the next reset and estimated upcoming resets.";
+"reset_times_subtitle" = "Sonraki sıfırlama ve tahmini sonraki sıfırlamalar için geri sayım veya tarih ve saat.";
 "reset_times_countdown" = "Geri sayım";
-"reset_times_clock" = "Saat";
-"show_upcoming_resets_title" = "Show upcoming resets";
-"show_upcoming_resets_subtitle" = "Estimate the next few reset times for fixed rolling quotas (1h, 4h, 5h, daily, weekly). Billing periods are not projected. Uses the Reset times style above.";
-"Then %@" = "Then %@";
+"reset_times_clock" = "Tarih ve saat";
+"show_upcoming_resets_title" = "Yaklaşan sıfırlamaları göster";
+"show_upcoming_resets_subtitle" = "Sabit kayan kotalar (1 sa, 4 sa, 5 sa, günlük, haftalık) için sonraki birkaç sıfırlama zamanını tahmin eder. Faturalama dönemleri projekte edilmez. Yukarıdaki «Sıfırlama zamanları» stilini kullanır.";
+"Then %@" = "Sonra %@";
 "cost_summary_title" = "Maliyet özeti";
 "cost_summary_off" = "Kapalı";
 "merge_icons_title" = "Simgeleri Birleştir";

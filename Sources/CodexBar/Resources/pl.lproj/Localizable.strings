@@ -578,12 +578,12 @@
 "usage_bars_fill_remaining" = "Pozostały limit";
 "usage_bars_fill_used" = "Wykorzystany limit";
 "reset_times_title" = "Czasy resetu";
-"reset_times_subtitle" = "Countdown or date & time for the next reset and estimated upcoming resets.";
+"reset_times_subtitle" = "Odliczanie albo data i godzina następnego resetu oraz szacowanych kolejnych resetów.";
 "reset_times_countdown" = "Odliczanie";
-"reset_times_clock" = "Godzina";
-"show_upcoming_resets_title" = "Show upcoming resets";
-"show_upcoming_resets_subtitle" = "Estimate the next few reset times for fixed rolling quotas (1h, 4h, 5h, daily, weekly). Billing periods are not projected. Uses the Reset times style above.";
-"Then %@" = "Then %@";
+"reset_times_clock" = "Data i godzina";
+"show_upcoming_resets_title" = "Pokaż nadchodzące resetowania";
+"show_upcoming_resets_subtitle" = "Szacuje kolejne czasy resetu dla stałych limitów przesuwnych (1 godz., 4 godz., 5 godz., dzienny, tygodniowy). Okresy rozliczeniowe nie są prognozowane. Używa stylu «Czasy resetu» powyżej.";
+"Then %@" = "Potem %@";
 "cost_summary_title" = "Podsumowanie kosztów";
 "cost_summary_off" = "Wyłączone";
 "merge_icons_title" = "Scal ikony";

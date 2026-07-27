@@ -570,12 +570,12 @@
 "usage_bars_fill_remaining" = "Als resterend";
 "usage_bars_fill_used" = "Als gebruikt";
 "reset_times_title" = "Resettijden";
-"reset_times_subtitle" = "Countdown or date & time for the next reset and estimated upcoming resets.";
+"reset_times_subtitle" = "Aftellen of datum & tijd voor de volgende reset en geschatte volgende resets.";
 "reset_times_countdown" = "Aftellen";
-"reset_times_clock" = "Kloktijd";
-"show_upcoming_resets_title" = "Show upcoming resets";
-"show_upcoming_resets_subtitle" = "Estimate the next few reset times for fixed rolling quotas (1h, 4h, 5h, daily, weekly). Billing periods are not projected. Uses the Reset times style above.";
-"Then %@" = "Then %@";
+"reset_times_clock" = "Datum & tijd";
+"show_upcoming_resets_title" = "Komende resets tonen";
+"show_upcoming_resets_subtitle" = "Schat de volgende resetmomenten voor vaste rollende quota (1u, 4u, 5u, dagelijks, wekelijks). Factureringsperioden worden niet geprojecteerd. Gebruikt de stijl van «Resettijden» hierboven.";
+"Then %@" = "Daarna %@";
 "cost_summary_title" = "Kostenoverzicht";
 "cost_summary_off" = "Uit";
 "merge_icons_title" = "Pictogrammen samenvoegen";

@@ -570,12 +570,12 @@
 "usage_bars_fill_remaining" = "За залишком";
 "usage_bars_fill_used" = "За використанням";
 "reset_times_title" = "Час скидання";
-"reset_times_subtitle" = "Countdown or date & time for the next reset and estimated upcoming resets.";
+"reset_times_subtitle" = "Зворотний відлік або дата й час наступного скидання та оцінених наступних скидань.";
 "reset_times_countdown" = "Зворотний відлік";
-"reset_times_clock" = "Час на годиннику";
-"show_upcoming_resets_title" = "Show upcoming resets";
-"show_upcoming_resets_subtitle" = "Estimate the next few reset times for fixed rolling quotas (1h, 4h, 5h, daily, weekly). Billing periods are not projected. Uses the Reset times style above.";
-"Then %@" = "Then %@";
+"reset_times_clock" = "Дата й час";
+"show_upcoming_resets_title" = "Показувати найближчі скидання";
+"show_upcoming_resets_subtitle" = "Оцінює кілька наступних часів скидання для фіксованих ковзних квот (1 год, 4 год, 5 год, доба, тиждень). Розрахункові періоди не проектуються. Використовує стиль «Час скидання» вище.";
+"Then %@" = "Потім %@";
 "cost_summary_title" = "Підсумок витрат";
 "cost_summary_off" = "Вимкнено";
 "merge_icons_title" = "Злиття значків";

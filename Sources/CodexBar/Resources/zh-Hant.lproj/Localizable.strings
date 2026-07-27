@@ -569,12 +569,12 @@
 "usage_bars_fill_remaining" = "按剩餘量";
 "usage_bars_fill_used" = "按已用量";
 "reset_times_title" = "重設時間";
-"reset_times_subtitle" = "Countdown or date & time for the next reset and estimated upcoming resets.";
+"reset_times_subtitle" = "下次重設與估算的後續重設可用倒數計時或日期時間顯示。";
 "reset_times_countdown" = "倒數計時";
-"reset_times_clock" = "時鐘時間";
-"show_upcoming_resets_title" = "Show upcoming resets";
-"show_upcoming_resets_subtitle" = "Estimate the next few reset times for fixed rolling quotas (1h, 4h, 5h, daily, weekly). Billing periods are not projected. Uses the Reset times style above.";
-"Then %@" = "Then %@";
+"reset_times_clock" = "日期和時間";
+"show_upcoming_resets_title" = "顯示即將到來的重設";
+"show_upcoming_resets_subtitle" = "為固定滾動配額（1 小時、4 小時、5 小時、每日、每週）估算接下來的幾次重設時間。不投影計費週期。顯示樣式跟隨上方的「重設時間」。";
+"Then %@" = "然後 %@";
 "cost_summary_title" = "費用摘要";
 "cost_summary_off" = "關閉";
 "merge_icons_title" = "合併圖示";

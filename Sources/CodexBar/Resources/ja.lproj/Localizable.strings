@@ -567,12 +567,12 @@
 "usage_bars_fill_remaining" = "残量として";
 "usage_bars_fill_used" = "消費量として";
 "reset_times_title" = "リセット時刻";
-"reset_times_subtitle" = "Countdown or date & time for the next reset and estimated upcoming resets.";
+"reset_times_subtitle" = "次回のリセットと推定されるその後のリセットを、カウントダウンまたは日時で表示します。";
 "reset_times_countdown" = "カウントダウン";
-"reset_times_clock" = "時計表示";
-"show_upcoming_resets_title" = "Show upcoming resets";
-"show_upcoming_resets_subtitle" = "Estimate the next few reset times for fixed rolling quotas (1h, 4h, 5h, daily, weekly). Billing periods are not projected. Uses the Reset times style above.";
-"Then %@" = "Then %@";
+"reset_times_clock" = "日時";
+"show_upcoming_resets_title" = "今後のリセットを表示";
+"show_upcoming_resets_subtitle" = "固定のローリング枠（1時間、4時間、5時間、日次、週次）の今後数回のリセット時刻を推定します。課金期間は投影しません。上の「リセット時刻」の表示スタイルを使います。";
+"Then %@" = "その後 %@";
 "cost_summary_title" = "コスト概要";
 "cost_summary_off" = "オフ";
 "merge_icons_title" = "アイコンを統合";
