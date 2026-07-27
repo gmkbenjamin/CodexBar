@@ -576,8 +576,12 @@
 "usage_bars_fill_remaining" = "حسب المتبقي";
 "usage_bars_fill_used" = "حسب المستهلك";
 "reset_times_title" = "أوقات إعادة التعيين";
+"reset_times_subtitle" = "Countdown or date & time for the next reset and estimated upcoming resets.";
 "reset_times_countdown" = "العد التنازلي";
 "reset_times_clock" = "وقت الساعة";
+"show_upcoming_resets_title" = "Show upcoming resets";
+"show_upcoming_resets_subtitle" = "Estimate the next few reset times for rolling quotas (for example 5-hour and weekly). Uses the Reset times style above.";
+"Then %@" = "Then %@";
 "cost_summary_title" = "ملخص التكلفة";
 "cost_summary_off" = "إيقاف";
 "merge_icons_title" = "أيقونات الدمج";

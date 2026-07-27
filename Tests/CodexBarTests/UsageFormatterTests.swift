@@ -10,6 +10,7 @@ struct UsageFormatterTests {
         "Resets %@",
         "Resets in %@",
         "Resets now",
+        "Then %@",
         "reset_tomorrow_format",
         "Updated %@",
         "Updated relative %@",
@@ -278,6 +279,85 @@ struct UsageFormatterTests {
         let window = RateWindow(usedPercent: 0, windowMinutes: nil, resetsAt: reset, resetDescription: "Resets soon")
         let text = UsageFormatter.resetLine(for: window, style: .countdown, now: now)
         #expect(text == "Resets in 11m")
+    }
+
+    @Test
+    func `upcoming reset dates step by window minutes`() {
+        let now = Date(timeIntervalSince1970: 1_700_000_000)
+        let reset = now.addingTimeInterval(3600)
+        let window = RateWindow(
+            usedPercent: 20,
+            windowMinutes: 5 * 60,
+            resetsAt: reset,
+            resetDescription: nil)
+        let dates = UsageFormatter.upcomingResetDates(for: window, count: 4, now: now)
+        #expect(dates.count == 4)
+        #expect(dates[0] == reset)
+        #expect(dates[1] == reset.addingTimeInterval(5 * 3600))
+        #expect(dates[2] == reset.addingTimeInterval(10 * 3600))
+        #expect(dates[3] == reset.addingTimeInterval(15 * 3600))
+    }
+
+    @Test
+    func `upcoming reset dates skip past anchors`() {
+        let now = Date(timeIntervalSince1970: 1_700_000_000)
+        let past = now.addingTimeInterval(-30 * 60)
+        let window = RateWindow(
+            usedPercent: 20,
+            windowMinutes: 60,
+            resetsAt: past,
+            resetDescription: nil)
+        let dates = UsageFormatter.upcomingResetDates(for: window, count: 2, now: now)
+        #expect(dates == [now.addingTimeInterval(30 * 60), now.addingTimeInterval(90 * 60)])
+    }
+
+    @Test
+    func `upcoming resets line requires known cadence`() {
+        let now = Date(timeIntervalSince1970: 1_700_000_000)
+        let reset = now.addingTimeInterval(3600)
+        let noCadence = RateWindow(
+            usedPercent: 10,
+            windowMinutes: nil,
+            resetsAt: reset,
+            resetDescription: nil)
+        #expect(UsageFormatter.upcomingResetsLine(for: noCadence, style: .countdown, now: now) == nil)
+
+        let rolling = RateWindow(
+            usedPercent: 10,
+            windowMinutes: 5 * 60,
+            resetsAt: reset,
+            resetDescription: nil)
+        let line = UsageFormatter.upcomingResetsLine(for: rolling, style: .countdown, now: now)
+        #expect(line == "Then 6h · 11h · 16h")
+    }
+
+    @Test
+    func `upcoming resets line uses timestamps in absolute style`() throws {
+        let now = Date(timeIntervalSince1970: 1_700_000_000)
+        let reset = now.addingTimeInterval(3600)
+        let rolling = RateWindow(
+            usedPercent: 10,
+            windowMinutes: 5 * 60,
+            resetsAt: reset,
+            resetDescription: nil)
+        let line = try #require(UsageFormatter.upcomingResetsLine(for: rolling, style: .absolute, now: now))
+        #expect(line.hasPrefix("Then "))
+        let stamp = UsageFormatter.resetTimestampDescription(from: reset.addingTimeInterval(5 * 3600))
+        #expect(line.contains(stamp))
+        #expect(!line.contains(" in "))
+    }
+
+    @Test
+    func `upcoming resets line omitted for synthetic placeholders`() {
+        let now = Date(timeIntervalSince1970: 1_700_000_000)
+        let window = RateWindow(
+            usedPercent: 0,
+            windowMinutes: 5 * 60,
+            resetsAt: now.addingTimeInterval(3600),
+            resetDescription: nil,
+            isSyntheticPlaceholder: true)
+        #expect(UsageFormatter.upcomingResetDates(for: window, count: 4, now: now).isEmpty)
+        #expect(UsageFormatter.upcomingResetsLine(for: window, style: .absolute, now: now) == nil)
     }
 
     @Test

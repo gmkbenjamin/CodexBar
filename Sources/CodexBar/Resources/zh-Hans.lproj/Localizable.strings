@@ -548,8 +548,12 @@
 "usage_bars_fill_remaining" = "按剩余量";
 "usage_bars_fill_used" = "按已用量";
 "reset_times_title" = "重置时间";
+"reset_times_subtitle" = "下一次重置与估算的后续重置可用倒计时或日期时间显示。";
 "reset_times_countdown" = "倒计时";
-"reset_times_clock" = "时钟时间";
+"reset_times_clock" = "日期和时间";
+"show_upcoming_resets_title" = "显示即将到来的重置";
+"show_upcoming_resets_subtitle" = "为滚动配额（例如 5 小时和每周）估算接下来的几次重置时间。显示样式跟随上方的“重置时间”。未知周期时不可用。";
+"Then %@" = "然后 %@";
 "cost_summary_title" = "费用摘要";
 "cost_summary_off" = "关闭";
 "merge_icons_title" = "合并图标";

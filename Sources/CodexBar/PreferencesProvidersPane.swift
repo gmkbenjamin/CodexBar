@@ -578,6 +578,7 @@ struct ProvidersPane: View {
             limitsAvailability: self.store.knownLimitsAvailability(for: provider),
             usageBarsShowUsed: self.settings.usageBarsShowUsed,
             resetTimeDisplayStyle: self.settings.resetTimeDisplayStyle,
+            showUpcomingResets: self.settings.showUpcomingResets,
             tokenCostUsageEnabled: self.settings.isCostUsageEffectivelyEnabled(for: provider),
             codexLocalSessionCostLedgerEnabled: self.settings.codexLocalSessionCostLedgerEnabled,
             tokenCostInlineDashboardEnabled: self.settings.costSummaryShowsInlineDashboard(for: provider),

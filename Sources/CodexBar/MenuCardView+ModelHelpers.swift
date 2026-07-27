@@ -517,9 +517,18 @@ extension UsageMenuCardView.Model {
     static func resetText(
         for window: RateWindow,
         style: ResetTimeDisplayStyle,
-        now: Date) -> String?
+        now: Date,
+        showUpcomingResets: Bool = false) -> String?
     {
-        UsageFormatter.resetLine(for: window, style: style, now: now)
+        guard let primary = UsageFormatter.resetLine(for: window, style: style, now: now) else {
+            return nil
+        }
+        guard showUpcomingResets,
+              let upcoming = UsageFormatter.upcomingResetsLine(for: window, style: style, now: now)
+        else {
+            return primary
+        }
+        return "\(primary)\n\(upcoming)"
     }
 
     static func placeholder(input: Input) -> String? {
@@ -901,7 +910,8 @@ extension UsageMenuCardView.Model {
             return self.resetText(
                 for: namedWindow.window,
                 style: input.resetTimeDisplayStyle,
-                now: input.now)
+                now: input.now,
+                showUpcomingResets: input.showUpcomingResets)
         }
         if input.provider == .antigravity,
            self.isAntigravityQuotaSummaryWindow(namedWindow)
@@ -911,7 +921,8 @@ extension UsageMenuCardView.Model {
         return self.resetText(
             for: namedWindow.window,
             style: input.resetTimeDisplayStyle,
-            now: input.now)
+            now: input.now,
+            showUpcomingResets: input.showUpcomingResets)
     }
 
     private static func antigravityQuotaSummaryResetText(_ description: String?) -> String? {
@@ -1021,7 +1032,11 @@ extension UsageMenuCardView.Model {
             title: title,
             percent: Self.clamped(percent),
             percentStyle: percentStyle,
-            resetText: Self.resetText(for: window, style: input.resetTimeDisplayStyle, now: input.now),
+            resetText: Self.resetText(
+                for: window,
+                style: input.resetTimeDisplayStyle,
+                now: input.now,
+                showUpcomingResets: input.showUpcomingResets),
             detailText: nil,
             detailLeftText: paceDetail?.leftLabel,
             detailRightText: paceDetail?.rightLabel,

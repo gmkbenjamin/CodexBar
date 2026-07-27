@@ -578,8 +578,12 @@
 "usage_bars_fill_remaining" = "Berdasarkan sisa kuota";
 "usage_bars_fill_used" = "Berdasarkan kuota terpakai";
 "reset_times_title" = "Waktu reset";
+"reset_times_subtitle" = "Countdown or date & time for the next reset and estimated upcoming resets.";
 "reset_times_countdown" = "Hitung mundur";
 "reset_times_clock" = "Waktu absolut";
+"show_upcoming_resets_title" = "Show upcoming resets";
+"show_upcoming_resets_subtitle" = "Estimate the next few reset times for rolling quotas (for example 5-hour and weekly). Uses the Reset times style above.";
+"Then %@" = "Then %@";
 "cost_summary_title" = "Ringkasan biaya";
 "cost_summary_off" = "Mati";
 "merge_icons_title" = "Gabung Ikon";

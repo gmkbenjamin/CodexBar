@@ -503,7 +503,9 @@ private struct MetricRow: View {
                             Text(rightLabel)
                                 .font(.footnote)
                                 .foregroundStyle(MenuHighlightStyle.secondary(self.isHighlighted))
-                                .lineLimit(1)
+                                .multilineTextAlignment(.trailing)
+                                .lineLimit(3)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
                     }
                     if self.metric.detailLeftText != nil || self.metric.detailRightText != nil {
@@ -1246,7 +1248,11 @@ extension UsageMenuCardView.Model {
             // Perplexity purchased credits don't reset; show balance without "Resets" prefix.
             let opusResetText: String? = input.provider == .perplexity || input.provider == .sub2api
                 ? opus.resetDescription?.trimmingCharacters(in: .whitespacesAndNewlines)
-                : Self.resetText(for: opus, style: input.resetTimeDisplayStyle, now: input.now)
+                : Self.resetText(
+                    for: opus,
+                    style: input.resetTimeDisplayStyle,
+                    now: input.now,
+                    showUpcomingResets: input.showUpcomingResets)
             let tertiaryPaceDetail = Self.resetWindowPaceDetail(window: opus, input: input)
             metrics.append(Metric(
                 id: "tertiary",
@@ -1286,7 +1292,11 @@ extension UsageMenuCardView.Model {
         {
             let percent = input.usageBarsShowUsed ? (100 - remaining) : remaining
             let resetText = codexProjection.limitWindow(for: .codeReview).flatMap {
-                Self.resetText(for: $0, style: input.resetTimeDisplayStyle, now: input.now)
+                Self.resetText(
+                    for: $0,
+                    style: input.resetTimeDisplayStyle,
+                    now: input.now,
+                    showUpcomingResets: input.showUpcomingResets)
             }
             metrics.append(Metric(
                 id: "code-review",
@@ -1312,7 +1322,7 @@ extension UsageMenuCardView.Model {
         openRouterQuotaDetail: String?) -> Metric
     {
         var presentation = PrimaryMetricPresentation(
-            resetText: Self.resetText(for: primary, style: input.resetTimeDisplayStyle, now: input.now),
+            resetText: Self.resetText(for: primary, input: input),
             detailText: input.provider == .zai ? zaiTokenDetail : nil)
         Self.applyPrimaryQuotaPresentation(
             &presentation,
@@ -1367,7 +1377,11 @@ extension UsageMenuCardView.Model {
                 pace: input.weeklyPace,
                 showUsed: input.usageBarsShowUsed)
         }
-        var weeklyResetText = Self.resetText(for: weekly, style: input.resetTimeDisplayStyle, now: input.now)
+        var weeklyResetText = Self.resetText(
+            for: weekly,
+            style: input.resetTimeDisplayStyle,
+            now: input.now,
+            showUpcomingResets: input.showUpcomingResets)
         var weeklyDetailText: String? = input.provider == .zai ? zaiTimeDetail : nil
         if input.provider == .warp,
            let detail = weekly.resetDescription,

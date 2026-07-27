@@ -26,6 +26,7 @@ struct SettingsDefaultsState {
     var weeklyProgressWorkDays: Int?
     var usageBarsShowUsed: Bool
     var resetTimesShowAbsolute: Bool
+    var showUpcomingResets: Bool
     var providerChangelogLinksEnabled: Bool
     var menuBarShowsBrandIconWithPercent: Bool
     var menuBarHidesCritters: Bool

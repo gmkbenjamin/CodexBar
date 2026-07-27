@@ -442,6 +442,7 @@ extension SettingsStore {
         let weeklyProgressWorkDays = userDefaults.object(forKey: "weeklyProgressWorkDays") as? Int
         let usageBarsShowUsed = userDefaults.object(forKey: "usageBarsShowUsed") as? Bool ?? false
         let resetTimesShowAbsolute = userDefaults.object(forKey: "resetTimesShowAbsolute") as? Bool ?? false
+        let showUpcomingResets = userDefaults.object(forKey: "showUpcomingResets") as? Bool ?? false
         let providerChangelogLinksEnabled = userDefaults.object(
             forKey: "providerChangelogLinksEnabled") as? Bool ?? false
         let menuBarShowsBrandIconWithPercent = userDefaults.object(
@@ -557,6 +558,7 @@ extension SettingsStore {
             weeklyProgressWorkDays: weeklyProgressWorkDays,
             usageBarsShowUsed: usageBarsShowUsed,
             resetTimesShowAbsolute: resetTimesShowAbsolute,
+            showUpcomingResets: showUpcomingResets,
             providerChangelogLinksEnabled: providerChangelogLinksEnabled,
             menuBarShowsBrandIconWithPercent: menuBarShowsBrandIconWithPercent,
             menuBarHidesCritters: menuBarHidesCritters,

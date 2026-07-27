@@ -36,10 +36,20 @@ struct MenuPane: View {
                 SettingsMenuPicker(
                     selection: self.$settings.resetTimesOption,
                     options: MenuSettingsMenuOptions.resetTimes,
-                    label: { Text(L("reset_times_title")) },
+                    label: {
+                        SettingsRowLabel(
+                            L("reset_times_title"),
+                            subtitle: L("reset_times_subtitle"))
+                    },
                     optionLabel: { option in
                         Text(option.label)
                     })
+
+                Toggle(isOn: self.$settings.showUpcomingResets) {
+                    SettingsRowLabel(
+                        L("show_upcoming_resets_title"),
+                        subtitle: L("show_upcoming_resets_subtitle"))
+                }
             } header: {
                 Text(L("section_usage"))
             }

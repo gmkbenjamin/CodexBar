@@ -568,8 +568,12 @@
 "usage_bars_fill_remaining" = "Verbleibend";
 "usage_bars_fill_used" = "Verbraucht";
 "reset_times_title" = "Zurücksetzzeiten";
+"reset_times_subtitle" = "Countdown or date & time for the next reset and estimated upcoming resets.";
 "reset_times_countdown" = "Countdown";
 "reset_times_clock" = "Uhrzeit";
+"show_upcoming_resets_title" = "Show upcoming resets";
+"show_upcoming_resets_subtitle" = "Estimate the next few reset times for rolling quotas (for example 5-hour and weekly). Uses the Reset times style above.";
+"Then %@" = "Then %@";
 "cost_summary_title" = "Kostenübersicht";
 "cost_summary_off" = "Aus";
 "merge_icons_title" = "Symbole zusammenführen";
