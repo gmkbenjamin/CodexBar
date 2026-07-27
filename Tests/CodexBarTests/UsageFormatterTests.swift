@@ -361,6 +361,29 @@ struct UsageFormatterTests {
     }
 
     @Test
+    func `upcoming resets skip billing cycle windows with windowMinutes`() {
+        let now = Date(timeIntervalSince1970: 1_700_000_000)
+        let reset = now.addingTimeInterval(10 * 24 * 3600)
+        // Cursor/Grok/Abacus-style billing periods also set windowMinutes, but must not be
+        // extrapolated as a fixed rolling cadence.
+        let billingCycle = RateWindow(
+            usedPercent: 40,
+            windowMinutes: 30 * 24 * 60,
+            resetsAt: reset,
+            resetDescription: nil)
+        #expect(UsageFormatter.isProjectableRollingWindow(minutes: 30 * 24 * 60) == false)
+        #expect(UsageFormatter.upcomingResetDates(for: billingCycle, count: 4, now: now).isEmpty)
+        #expect(UsageFormatter.upcomingResetsLine(for: billingCycle, style: .countdown, now: now) == nil)
+
+        let calendarDerived = RateWindow(
+            usedPercent: 40,
+            windowMinutes: 31 * 24 * 60, // Abacus-style calendar-derived length
+            resetsAt: reset,
+            resetDescription: nil)
+        #expect(UsageFormatter.upcomingResetDates(for: calendarDerived, count: 4, now: now).isEmpty)
+    }
+
+    @Test
     func `reset line falls back to provided description`() {
         let window = RateWindow(
             usedPercent: 0,
