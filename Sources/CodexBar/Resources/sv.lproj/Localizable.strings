@@ -569,8 +569,12 @@
 "usage_bars_fill_remaining" = "Återstående";
 "usage_bars_fill_used" = "Förbrukat";
 "reset_times_title" = "Återställningstider";
+"reset_times_subtitle" = "Countdown or date & time for the next reset and estimated upcoming resets.";
 "reset_times_countdown" = "Nedräkning";
 "reset_times_clock" = "Klockslag";
+"show_upcoming_resets_title" = "Show upcoming resets";
+"show_upcoming_resets_subtitle" = "Estimate the next few reset times for rolling quotas (for example 5-hour and weekly). Uses the Reset times style above.";
+"Then %@" = "Then %@";
 "cost_summary_title" = "Kostnadssammanfattning";
 "cost_summary_off" = "Av";
 "merge_icons_title" = "Slå ihop ikoner";

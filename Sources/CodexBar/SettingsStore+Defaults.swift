@@ -285,6 +285,14 @@ extension SettingsStore {
         }
     }
 
+    var showUpcomingResets: Bool {
+        get { self.defaultsState.showUpcomingResets }
+        set {
+            self.defaultsState.showUpcomingResets = newValue
+            self.userDefaults.set(newValue, forKey: "showUpcomingResets")
+        }
+    }
+
     var providerChangelogLinksEnabled: Bool {
         get { self.defaultsState.providerChangelogLinksEnabled }
         set {

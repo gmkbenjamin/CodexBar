@@ -576,8 +576,12 @@
 "usage_bars_fill_remaining" = "ตามปริมาณคงเหลือ";
 "usage_bars_fill_used" = "ตามปริมาณที่ใช้ไป";
 "reset_times_title" = "เวลารีเซ็ต";
+"reset_times_subtitle" = "Countdown or date & time for the next reset and estimated upcoming resets.";
 "reset_times_countdown" = "นับถอยหลัง";
 "reset_times_clock" = "เวลาตามนาฬิกา";
+"show_upcoming_resets_title" = "Show upcoming resets";
+"show_upcoming_resets_subtitle" = "Estimate the next few reset times for rolling quotas (for example 5-hour and weekly). Uses the Reset times style above.";
+"Then %@" = "Then %@";
 "cost_summary_title" = "สรุปค่าใช้จ่าย";
 "cost_summary_off" = "ปิด";
 "merge_icons_title" = "ผสานไอคอน";

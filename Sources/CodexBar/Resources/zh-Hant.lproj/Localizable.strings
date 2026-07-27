@@ -569,8 +569,12 @@
 "usage_bars_fill_remaining" = "按剩餘量";
 "usage_bars_fill_used" = "按已用量";
 "reset_times_title" = "重設時間";
+"reset_times_subtitle" = "Countdown or date & time for the next reset and estimated upcoming resets.";
 "reset_times_countdown" = "倒數計時";
 "reset_times_clock" = "時鐘時間";
+"show_upcoming_resets_title" = "Show upcoming resets";
+"show_upcoming_resets_subtitle" = "Estimate the next few reset times for rolling quotas (for example 5-hour and weekly). Uses the Reset times style above.";
+"Then %@" = "Then %@";
 "cost_summary_title" = "費用摘要";
 "cost_summary_off" = "關閉";
 "merge_icons_title" = "合併圖示";

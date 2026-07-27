@@ -123,6 +123,7 @@ extension StatusItemController {
             limitsAvailability: self.store.knownLimitsAvailability(for: target),
             usageBarsShowUsed: self.settings.usageBarsShowUsed,
             resetTimeDisplayStyle: self.settings.resetTimeDisplayStyle,
+            showUpcomingResets: self.settings.showUpcomingResets,
             tokenCostUsageEnabled: self.settings.isCostUsageEffectivelyEnabled(for: target),
             codexLocalSessionCostLedgerEnabled: self.settings.codexLocalSessionCostLedgerEnabled,
             tokenCostInlineDashboardEnabled: self.settings.costSummaryShowsInlineDashboard(for: target),

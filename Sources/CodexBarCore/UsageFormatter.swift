@@ -142,6 +142,13 @@ public enum UsageFormatter {
         return date.formatted(.dateTime.month(.abbreviated).day().hour().minute().locale(self.currentLocale()))
     }
 
+    /// Compact date+time stamp for multi-reset schedules (always includes weekday + date).
+    public static func resetTimestampDescription(from date: Date) -> String {
+        date.formatted(
+            .dateTime.weekday(.abbreviated).month(.abbreviated).day().hour().minute()
+                .locale(self.currentLocale()))
+    }
+
     public static func resetLine(
         for window: RateWindow,
         style: ResetTimeDisplayStyle,
@@ -174,6 +181,73 @@ public enum UsageFormatter {
             return self.localized("Resets %@", trimmed)
         }
         return nil
+    }
+
+    /// Projected reset timestamps for a rolling quota window.
+    ///
+    /// Returns up to `count` boundaries starting at `resetsAt` (or the next future step when that
+    /// timestamp is already past), advancing by `windowMinutes`. Empty when cadence is unknown,
+    /// the window is a synthetic placeholder, or `count` is non-positive.
+    public static func upcomingResetDates(
+        for window: RateWindow,
+        count: Int = 4,
+        now: Date = .init()) -> [Date]
+    {
+        guard count > 0,
+              !window.isSyntheticPlaceholder,
+              let resetsAt = window.resetsAt,
+              let windowMinutes = window.windowMinutes,
+              windowMinutes > 0
+        else {
+            return []
+        }
+
+        let step = TimeInterval(windowMinutes) * 60
+        var cursor = resetsAt
+        if cursor <= now {
+            let elapsed = now.timeIntervalSince(cursor)
+            let steps = Int(floor(elapsed / step)) + 1
+            cursor = cursor.addingTimeInterval(TimeInterval(steps) * step)
+        }
+
+        var dates: [Date] = []
+        dates.reserveCapacity(count)
+        for _ in 0..<count {
+            dates.append(cursor)
+            cursor = cursor.addingTimeInterval(step)
+        }
+        return dates
+    }
+
+    /// Compact schedule of resets after the immediate next one (already shown via `resetLine`).
+    ///
+    /// Example: `"Then 7h · 12h · 17h"` or `"Then Tue Jul 29, 8:00 PM · Wed Jul 30, 1:00 AM · Wed Jul 30, 6:00 AM"`.
+    public static func upcomingResetsLine(
+        for window: RateWindow,
+        style: ResetTimeDisplayStyle,
+        totalCount: Int = 4,
+        now: Date = .init()) -> String?
+    {
+        let dates = self.upcomingResetDates(for: window, count: totalCount, now: now)
+        let additional = Array(dates.dropFirst())
+        guard !additional.isEmpty else { return nil }
+
+        let parts: [String] = additional.map { date in
+            switch style {
+            case .countdown:
+                let countdown = self.resetCountdownDescription(from: date, now: now)
+                if countdown == "now" {
+                    return countdown
+                }
+                if countdown.hasPrefix("in ") {
+                    return String(countdown.dropFirst(3))
+                }
+                return countdown
+            case .absolute:
+                return self.resetTimestampDescription(from: date)
+            }
+        }
+        return self.localized("Then %@", parts.joined(separator: " · "))
     }
 
     public static func updatedString(from date: Date, now: Date = .init()) -> String {

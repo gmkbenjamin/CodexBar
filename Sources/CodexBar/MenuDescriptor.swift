@@ -255,7 +255,8 @@ struct MenuDescriptor {
                     title: labels.primary,
                     window: primaryWindow,
                     resetStyle: resetStyle,
-                    showUsed: settings.usageBarsShowUsed)
+                    showUsed: settings.usageBarsShowUsed,
+                    showUpcomingResets: settings.showUpcomingResets)
                 if primaryDescriptionIsDetail,
                    let primaryDetail,
                    !primaryDetail.isEmpty
@@ -297,6 +298,7 @@ struct MenuDescriptor {
                     window: weekly,
                     resetStyle: resetStyle,
                     showUsed: settings.usageBarsShowUsed,
+                    showUpcomingResets: settings.showUpcomingResets,
                     resetOverride: weeklyResetOverride)
                 if [.kilo, .chutes].contains(provider),
                    weekly.resetsAt != nil,
@@ -321,6 +323,7 @@ struct MenuDescriptor {
                     window: opus,
                     resetStyle: resetStyle,
                     showUsed: settings.usageBarsShowUsed,
+                    showUpcomingResets: settings.showUpcomingResets,
                     resetOverride: opusResetOverride)
             }
 
@@ -743,6 +746,7 @@ struct MenuDescriptor {
         window: RateWindow,
         resetStyle: ResetTimeDisplayStyle,
         showUsed: Bool,
+        showUpcomingResets: Bool = false,
         resetOverride: String? = nil)
     {
         let line = UsageFormatter
@@ -752,6 +756,11 @@ struct MenuDescriptor {
             entries.append(.text(resetOverride, .secondary))
         } else if let reset = UsageFormatter.resetLine(for: window, style: resetStyle) {
             entries.append(.text(reset, .secondary))
+            if showUpcomingResets,
+               let upcoming = UsageFormatter.upcomingResetsLine(for: window, style: resetStyle)
+            {
+                entries.append(.text(upcoming, .secondary))
+            }
         }
     }
 
