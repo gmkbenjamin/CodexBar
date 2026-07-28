@@ -1248,11 +1248,7 @@ extension UsageMenuCardView.Model {
             // Perplexity purchased credits don't reset; show balance without "Resets" prefix.
             let opusResetText: String? = input.provider == .perplexity || input.provider == .sub2api
                 ? opus.resetDescription?.trimmingCharacters(in: .whitespacesAndNewlines)
-                : Self.resetText(
-                    for: opus,
-                    style: input.resetTimeDisplayStyle,
-                    now: input.now,
-                    showUpcomingResets: input.showUpcomingResets)
+                : Self.resetText(for: opus, input: input)
             let tertiaryPaceDetail = Self.resetWindowPaceDetail(window: opus, input: input)
             metrics.append(Metric(
                 id: "tertiary",
@@ -1292,11 +1288,7 @@ extension UsageMenuCardView.Model {
         {
             let percent = input.usageBarsShowUsed ? (100 - remaining) : remaining
             let resetText = codexProjection.limitWindow(for: .codeReview).flatMap {
-                Self.resetText(
-                    for: $0,
-                    style: input.resetTimeDisplayStyle,
-                    now: input.now,
-                    showUpcomingResets: input.showUpcomingResets)
+                Self.resetText(for: $0, input: input)
             }
             metrics.append(Metric(
                 id: "code-review",
@@ -1377,11 +1369,7 @@ extension UsageMenuCardView.Model {
                 pace: input.weeklyPace,
                 showUsed: input.usageBarsShowUsed)
         }
-        var weeklyResetText = Self.resetText(
-            for: weekly,
-            style: input.resetTimeDisplayStyle,
-            now: input.now,
-            showUpcomingResets: input.showUpcomingResets)
+        var weeklyResetText = Self.resetText(for: weekly, input: input)
         var weeklyDetailText: String? = input.provider == .zai ? zaiTimeDetail : nil
         if input.provider == .warp,
            let detail = weekly.resetDescription,

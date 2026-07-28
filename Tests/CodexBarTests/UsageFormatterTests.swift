@@ -312,6 +312,21 @@ struct UsageFormatterTests {
     }
 
     @Test
+    func `upcoming resets line keeps first future boundary after past anchor`() {
+        let now = Date(timeIntervalSince1970: 1_700_000_000)
+        let window = RateWindow(
+            usedPercent: 20,
+            windowMinutes: 60,
+            resetsAt: now.addingTimeInterval(-30 * 60),
+            resetDescription: nil)
+
+        #expect(UsageFormatter.resetLine(for: window, style: .countdown, now: now) == "Resets now")
+        #expect(
+            UsageFormatter.upcomingResetsLine(for: window, style: .countdown, now: now)
+                == "Then 30m · 1h 30m · 2h 30m")
+    }
+
+    @Test
     func `upcoming resets line requires known cadence`() {
         let now = Date(timeIntervalSince1970: 1_700_000_000)
         let reset = now.addingTimeInterval(3600)
