@@ -240,13 +240,53 @@ struct KeychainCacheStoreTests {
                         #expect(Bool(false), "Expected in-process memory cache entry")
                     }
                     #expect(KeychainCacheStore.keys(category: "cookie").contains(key))
-                    #expect(KeychainCacheStore.clearResult(key: key) == .removed)
+                    #expect(KeychainCacheStore.clearResult(key: key) == .failed)
                     switch KeychainCacheStore.load(key: key, as: TestEntry.self) {
                     case .missing:
                         break
                     case .found, .temporarilyUnavailable, .invalid:
                         #expect(Bool(false), "Expected memory cache entry to be cleared")
                     }
+                }
+            }
+        }
+    }
+
+    @Test
+    func `disabled keychain access does not retain OAuth entries in memory`() {
+        KeychainCacheStore.resetDisabledAccessMemoryStoreForTesting()
+        defer {
+            KeychainCacheStore.resetDisabledAccessMemoryStoreForTesting()
+            KeychainAccessGate.resetOverrideForTesting()
+        }
+
+        let service = "disabled-memory-oauth-\(UUID().uuidString)"
+        let key = KeychainCacheStore.Key.oauth(provider: .claude)
+        let entry = TestEntry(value: "synthetic-oauth-credential", storedAt: Date(timeIntervalSince1970: 4))
+
+        KeychainAccessGate.withTaskOverrideForTesting(true) {
+            KeychainCacheStore.withDisabledAccessMemoryStoreForTesting(true) {
+                KeychainCacheStore.withServiceOverrideForTesting(service) {
+                    #expect(!KeychainCacheStore.storeResult(key: key, entry: entry))
+                    #expect(self.loadedEntry(for: key) == nil)
+                    #expect(KeychainCacheStore.keysResult(category: "oauth") == .failed)
+                }
+            }
+        }
+    }
+
+    @Test
+    func `disabled keychain access reports empty cookie enumeration as incomplete`() {
+        KeychainCacheStore.resetDisabledAccessMemoryStoreForTesting()
+        defer {
+            KeychainCacheStore.resetDisabledAccessMemoryStoreForTesting()
+            KeychainAccessGate.resetOverrideForTesting()
+        }
+
+        KeychainAccessGate.withTaskOverrideForTesting(true) {
+            KeychainCacheStore.withDisabledAccessMemoryStoreForTesting(true) {
+                KeychainCacheStore.withServiceOverrideForTesting("disabled-empty-\(UUID().uuidString)") {
+                    #expect(KeychainCacheStore.keysResult(category: "cookie") == .failed)
                 }
             }
         }

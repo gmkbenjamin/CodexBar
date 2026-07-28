@@ -97,8 +97,11 @@ This is OS/keychain ACL behavior, not a `ThisDeviceOnly` migration issue.
 Effects:
 - Blocks keychain reads/writes in legacy stores and Claude CLI keychain bootstrap.
 - Disables Chromium cookie auto-import paths that require Safe Storage keychain decryption (Safari/Firefox remain eligible).
-- Keeps an in-process memory fallback for `KeychainCacheStore` / cookie session caches so Cursor (and other cookie providers) can still reconcile sessions without Keychain persistence.
+- Keeps an in-process memory fallback only for cookie-session entries in `KeychainCacheStore`, so Cursor (and other
+  cookie providers) can still reconcile sessions without retaining OAuth credentials or other cache categories.
 - Clears that in-process fallback whenever Keychain access is toggled, so disabled-mode cookies cannot resurface after re-enabling Keychain.
+- Reports cookie deletion as incomplete while Keychain access is disabled: the process-local copy is removed, but
+  CodexBar cannot truthfully claim that an inaccessible persistent Keychain row was deleted.
 - Continues to block Claude Auto **background** CLI launches, because the Claude CLI child process can still invoke `/usr/bin/security` and prompt outside CodexBar’s gate. Manual Refresh may still launch CLI (user-initiated).
 
 ## Verification
