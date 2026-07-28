@@ -100,7 +100,7 @@ public enum KeychainCacheStore {
         {
             return testResult
         }
-        if self.shouldUseDisabledAccessMemoryStore {
+        if self.shouldUseDisabledAccessMemoryStore(for: key.category) {
             return self.loadFromDisabledAccessMemory(key: key, as: type)
         }
         guard self.canUseRealKeychain else { return .missing }
@@ -156,7 +156,7 @@ public enum KeychainCacheStore {
         {
             return stored
         }
-        if self.shouldUseDisabledAccessMemoryStore {
+        if self.shouldUseDisabledAccessMemoryStore(for: key.category) {
             return self.storeInDisabledAccessMemory(key: key, entry: entry)
         }
         guard self.canUseRealKeychain else { return false }
@@ -222,8 +222,12 @@ public enum KeychainCacheStore {
         {
             return removed ? .removed : .missing
         }
-        if self.shouldUseDisabledAccessMemoryStore {
-            return self.clearDisabledAccessMemory(key: key) ? .removed : .missing
+        if self.shouldUseDisabledAccessMemoryStore(for: key.category) {
+            // The matching persistent Keychain row is deliberately inaccessible in this mode. Remove the
+            // process-local copy, but report the operation as incomplete so callers never claim the durable
+            // credential was deleted only for it to reappear after Keychain access is re-enabled.
+            _ = self.clearDisabledAccessMemory(key: key)
+            return .failed
         }
         guard self.canUseRealKeychain else { return .failed }
         #if os(macOS)
@@ -259,8 +263,11 @@ public enum KeychainCacheStore {
         {
             return .found(keys)
         }
-        if self.shouldUseDisabledAccessMemoryStore {
-            return .found(self.keysFromDisabledAccessMemory(category: category))
+        if self.shouldUseDisabledAccessMemoryStore(for: category) {
+            let keys = self.keysFromDisabledAccessMemory(category: category)
+            // An empty process-local store cannot prove there are no persistent entries hidden behind the
+            // disabled Keychain gate. Surface that uncertainty instead of reporting "no cached cookies".
+            return keys.isEmpty ? .failed : .found(keys)
         }
         guard self.canUseRealKeychain else { return .failed }
         #if os(macOS)
@@ -435,7 +442,8 @@ public enum KeychainCacheStore {
     /// When the user disables Keychain access, keep an in-process cache so cookie/session
     /// reconciliation can still succeed without treating every refresh as a session change.
     /// Unit tests keep using the isolated test stores instead, unless a test explicitly opts in.
-    private static var shouldUseDisabledAccessMemoryStore: Bool {
+    private static func shouldUseDisabledAccessMemoryStore(for category: String) -> Bool {
+        guard category == "cookie" else { return false }
         #if DEBUG
         if self.disabledAccessMemoryStoreEnabledForTesting == true {
             return true
