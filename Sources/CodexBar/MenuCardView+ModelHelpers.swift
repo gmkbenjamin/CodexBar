@@ -531,6 +531,14 @@ extension UsageMenuCardView.Model {
         return "\(primary)\n\(upcoming)"
     }
 
+    static func resetText(for window: RateWindow, input: Input) -> String? {
+        self.resetText(
+            for: window,
+            style: input.resetTimeDisplayStyle,
+            now: input.now,
+            showUpcomingResets: input.showUpcomingResets)
+    }
+
     static func placeholder(input: Input) -> String? {
         if self.shouldShowRateLimitsUnavailablePlaceholder(input: input) {
             return L("Limits not available")

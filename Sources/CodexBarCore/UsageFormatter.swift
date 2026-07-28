@@ -237,7 +237,7 @@ public enum UsageFormatter {
         }
     }
 
-    /// Compact schedule of resets after the immediate next one (already shown via `resetLine`).
+    /// Compact schedule of future resets not already shown via `resetLine`.
     ///
     /// Example: `"Then 7h · 12h · 17h"` or `"Then Tue Jul 29, 8:00 PM · Wed Jul 30, 1:00 AM · Wed Jul 30, 6:00 AM"`.
     public static func upcomingResetsLine(
@@ -247,7 +247,9 @@ public enum UsageFormatter {
         now: Date = .init()) -> String?
     {
         let dates = self.upcomingResetDates(for: window, count: totalCount, now: now)
-        let additional = Array(dates.dropFirst())
+        let reportedResetIsFuture = window.resetsAt.map { $0 > now } ?? false
+        let additionalCount = max(0, totalCount - 1)
+        let additional = Array(dates.dropFirst(reportedResetIsFuture ? 1 : 0).prefix(additionalCount))
         guard !additional.isEmpty else { return nil }
 
         let parts: [String] = additional.map { date in
