@@ -10,11 +10,16 @@ struct CodexWeeklyResetConfirmation: Sendable {
 
     enum ConfirmationDecision: Equatable, Sendable {
         case publishConfirmation
+        case requiresDelayedConfirmation
         case preservePrevious
     }
 
     private static let resetEquivalenceToleranceSeconds: TimeInterval = 2 * 60
     private static let resetDueToleranceSeconds: TimeInterval = 2 * 60
+    private static let stableBoundaryToleranceSeconds: TimeInterval = 0.5
+    private static let minimumBoundaryObservationSeconds: TimeInterval = 2
+    private static let rollingBoundaryToleranceSeconds: TimeInterval = 2
+    private static let weeklyWindowSeconds: TimeInterval = 7 * 24 * 60 * 60
     private static let resetThreshold = 1.0
 
     static func initialDecision(
@@ -144,14 +149,62 @@ struct CodexWeeklyResetConfirmation: Sendable {
                previousWeekly,
                capturedAt: previous.updatedAt)
         {
-            guard confirmation.updatedAt.timeIntervalSince(previousBoundary) >= -Self.resetDueToleranceSeconds,
-                  initialBoundary.timeIntervalSince(previousBoundary) >= Self.resetEquivalenceToleranceSeconds,
+            guard initialBoundary.timeIntervalSince(previousBoundary) >= Self.resetEquivalenceToleranceSeconds,
                   confirmationBoundary.timeIntervalSince(previousBoundary) >= Self.resetEquivalenceToleranceSeconds
             else {
                 return .preservePrevious
             }
+            if confirmation.updatedAt.timeIntervalSince(previousBoundary) < -Self.resetDueToleranceSeconds {
+                switch Self.earlyBoundaryPattern(
+                    initialBoundary: initialBoundary,
+                    initialCapturedAt: initial.updatedAt,
+                    confirmationBoundary: confirmationBoundary,
+                    confirmationCapturedAt: confirmation.updatedAt)
+                {
+                case .stable:
+                    break
+                case .rolling:
+                    return .preservePrevious
+                case .indeterminate:
+                    return .requiresDelayedConfirmation
+                }
+            }
         }
         return .publishConfirmation
+    }
+
+    private enum EarlyBoundaryPattern {
+        case stable
+        case rolling
+        case indeterminate
+    }
+
+    private static func earlyBoundaryPattern(
+        initialBoundary: Date,
+        initialCapturedAt: Date,
+        confirmationBoundary: Date,
+        confirmationCapturedAt: Date) -> EarlyBoundaryPattern
+    {
+        let observationSeconds = confirmationCapturedAt.timeIntervalSince(initialCapturedAt)
+        let boundaryAdvanceSeconds = confirmationBoundary.timeIntervalSince(initialBoundary)
+        guard observationSeconds >= Self.minimumBoundaryObservationSeconds else {
+            return .indeterminate
+        }
+        if abs(boundaryAdvanceSeconds) <= Self.stableBoundaryToleranceSeconds {
+            return .stable
+        }
+
+        let initialHorizonSeconds = initialBoundary.timeIntervalSince(initialCapturedAt)
+        let confirmationHorizonSeconds = confirmationBoundary.timeIntervalSince(confirmationCapturedAt)
+        let hasRollingWeeklyHorizon =
+            abs(initialHorizonSeconds - Self.weeklyWindowSeconds) < Self.resetEquivalenceToleranceSeconds
+                && abs(confirmationHorizonSeconds - Self.weeklyWindowSeconds) < Self.resetEquivalenceToleranceSeconds
+        if hasRollingWeeklyHorizon,
+           abs(boundaryAdvanceSeconds - observationSeconds) <= Self.rollingBoundaryToleranceSeconds
+        {
+            return .rolling
+        }
+        return .indeterminate
     }
 
     private static func initialDecisionWithoutWeeklyBaseline(
