@@ -271,6 +271,66 @@ struct CodexWeeklyResetConfirmationTests {
     }
 
     @Test
+    func `stable intentional reset before prior boundary publishes`() throws {
+        let formatter = ISO8601DateFormatter()
+        let previousCapturedAt = try #require(formatter.date(from: "2026-07-30T10:00:00Z"))
+        let previousReset = try #require(formatter.date(from: "2026-08-04T19:21:00Z"))
+        let initialCapturedAt = try #require(formatter.date(from: "2026-07-30T13:00:00Z"))
+        let intentionalReset = try #require(formatter.date(from: "2026-08-06T13:00:00Z"))
+        let previous = self.snapshot(
+            capturedAt: previousCapturedAt,
+            weeklyUsed: 100,
+            weeklyReset: previousReset)
+        let initial = self.snapshot(
+            capturedAt: initialCapturedAt,
+            weeklyUsed: 0,
+            weeklyReset: intentionalReset)
+        let confirmation = self.snapshot(
+            capturedAt: initialCapturedAt.addingTimeInterval(30),
+            weeklyUsed: 0,
+            weeklyReset: intentionalReset)
+
+        #expect(
+            CodexWeeklyResetConfirmation.initialDecision(previous: previous, initial: initial)
+                == .requiresConfirmation)
+        #expect(
+            CodexWeeklyResetConfirmation.confirmationDecision(
+                previous: previous,
+                initial: initial,
+                confirmation: confirmation)
+                == .publishConfirmation)
+    }
+
+    @Test
+    func `very close stable reset waits for a delayed confirmation`() {
+        let previousReset = self.capturedAt.addingTimeInterval(4 * 24 * 60 * 60)
+        let intentionalReset = self.capturedAt.addingTimeInterval(7 * 24 * 60 * 60)
+        let previous = self.snapshot(offset: 0, weeklyUsed: 100, weeklyReset: previousReset)
+        let initial = self.snapshot(offset: 1, weeklyUsed: 0, weeklyReset: intentionalReset)
+        let closeConfirmation = self.snapshot(
+            offset: 1.5,
+            weeklyUsed: 0,
+            weeklyReset: intentionalReset)
+        let delayedConfirmation = self.snapshot(
+            offset: 4,
+            weeklyUsed: 0,
+            weeklyReset: intentionalReset)
+
+        #expect(
+            CodexWeeklyResetConfirmation.confirmationDecision(
+                previous: previous,
+                initial: initial,
+                confirmation: closeConfirmation)
+                == .requiresDelayedConfirmation)
+        #expect(
+            CodexWeeklyResetConfirmation.confirmationDecision(
+                previous: previous,
+                initial: initial,
+                confirmation: delayedConfirmation)
+                == .publishConfirmation)
+    }
+
+    @Test
     func `unchanged regressed and mismatched reset boundaries preserve the previous snapshot`() {
         let previous = self.snapshot(offset: 0, weeklyUsed: 50, weeklyReset: self.resetAt)
         let unchanged = self.snapshot(offset: 1, weeklyUsed: 0, weeklyReset: self.resetAt)

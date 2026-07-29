@@ -424,6 +424,60 @@ extension CodexAccountScopedRefreshTests {
         #expect(recorder.usedPercents.isEmpty)
     }
 
+    @Test
+    func `stable intentional weekly reset publishes before the prior boundary`() async {
+        let suite = "CodexWeeklyResetPublicationTests-stable-intentional-reset"
+        let email = "stable-intentional-reset@example.com"
+        let settings = self.makeSettingsStore(suite: suite)
+        settings.refreshFrequency = .manual
+        settings.codexCookieSource = .off
+        settings._test_liveSystemCodexAccount = self.liveAccount(
+            email: email,
+            identity: .providerAccount(id: "acct-stable-intentional-reset"))
+        defer { settings._test_liveSystemCodexAccount = nil }
+
+        let now = Date()
+        let previousReset = now.addingTimeInterval(4 * 24 * 60 * 60)
+        let intentionalReset = now.addingTimeInterval(7 * 24 * 60 * 60)
+        let prior = self.codexWeeklySnapshot(
+            email: email,
+            weeklyUsedPercent: 100,
+            weeklyReset: previousReset,
+            updatedAt: now.addingTimeInterval(-60))
+        let initialLow = self.codexWeeklySnapshot(
+            email: email,
+            weeklyUsedPercent: 0,
+            weeklyReset: intentionalReset,
+            updatedAt: now.addingTimeInterval(-30))
+        let confirmedLow = self.codexWeeklySnapshot(
+            email: email,
+            weeklyUsedPercent: 0,
+            weeklyReset: intentionalReset,
+            updatedAt: now)
+        let loader = SequencedCodexSnapshotLoader(steps: [
+            .success(initialLow),
+            .success(confirmedLow),
+        ])
+        let store = self.makeCodexWeeklyPublicationStore(settings: settings, suite: suite)
+        let priorRevision = await self.seedCodexWeeklyPublicationState(
+            store: store,
+            settings: settings,
+            snapshot: prior,
+            error: nil)
+        self.installContextualCodexProvider(on: store) { _ in try await loader.load() }
+        let recorder = CodexWeeklyPublicationEventRecorder(email: email)
+        defer { recorder.invalidate() }
+
+        await store.refreshProvider(.codex, allowDisabled: true)
+
+        #expect(await loader.callCount == 2)
+        #expect(store.snapshots[.codex]?.updatedAt == confirmedLow.updatedAt)
+        #expect(store.snapshots[.codex]?.secondary?.usedPercent == 0)
+        #expect(store.lastKnownResetSnapshots[.codex]?.updatedAt == confirmedLow.updatedAt)
+        #expect(store.planUtilizationHistoryRevision > priorRevision)
+        #expect(recorder.usedPercents == [0])
+    }
+
     @Test(arguments: CodexRejectedConfirmationCase.allCases)
     func `rejected single confirmation preserves every prior public surface`(
         rejection: CodexRejectedConfirmationCase) async

@@ -58,33 +58,45 @@ extension UsageStore {
             break
         }
 
-        guard !Task.isCancelled else { return nil }
-        let confirmationOutcome = await fetchConfirmation()
-        guard !Task.isCancelled,
-              case let .success(confirmationResult) = confirmationOutcome.result
-        else {
-            return nil
-        }
-        let confirmationSnapshot = confirmationResult.usage.scoped(to: .codex)
-        guard CodexIdentityResolver.normalizeEmail(rawInitialSnapshot.accountEmail(for: .codex)) ==
-            CodexIdentityResolver.normalizeEmail(confirmationSnapshot.accountEmail(for: .codex))
-        else {
-            return nil
-        }
-        switch CodexWeeklyResetConfirmation.confirmationDecision(
-            previous: publicationBaseline,
-            initial: rawInitialSnapshot,
-            confirmation: confirmationSnapshot)
-        {
-        case .publishConfirmation:
-            if let missingWindowBackfillSnapshot {
-                return confirmationOutcome.replacingUsage(Self.codexBackfillingResetWindows(
-                    confirmationSnapshot,
-                    from: missingWindowBackfillSnapshot))
+        for confirmationAttempt in 0...1 {
+            guard !Task.isCancelled else { return nil }
+            if confirmationAttempt > 0 {
+                do {
+                    try await Task.sleep(for: .seconds(2))
+                } catch {
+                    return nil
+                }
             }
-            return confirmationOutcome
-        case .preservePrevious:
-            return nil
+            let confirmationOutcome = await fetchConfirmation()
+            guard !Task.isCancelled,
+                  case let .success(confirmationResult) = confirmationOutcome.result
+            else {
+                return nil
+            }
+            let confirmationSnapshot = confirmationResult.usage.scoped(to: .codex)
+            guard CodexIdentityResolver.normalizeEmail(rawInitialSnapshot.accountEmail(for: .codex)) ==
+                CodexIdentityResolver.normalizeEmail(confirmationSnapshot.accountEmail(for: .codex))
+            else {
+                return nil
+            }
+            switch CodexWeeklyResetConfirmation.confirmationDecision(
+                previous: publicationBaseline,
+                initial: rawInitialSnapshot,
+                confirmation: confirmationSnapshot)
+            {
+            case .publishConfirmation:
+                if let missingWindowBackfillSnapshot {
+                    return confirmationOutcome.replacingUsage(Self.codexBackfillingResetWindows(
+                        confirmationSnapshot,
+                        from: missingWindowBackfillSnapshot))
+                }
+                return confirmationOutcome
+            case .requiresDelayedConfirmation:
+                continue
+            case .preservePrevious:
+                return nil
+            }
         }
+        return nil
     }
 }
