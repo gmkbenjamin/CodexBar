@@ -686,17 +686,32 @@ struct ClaudeCLIFetchStrategy: ProviderFetchStrategy {
             && ProviderInteractionContext.current == .background
         if isBackgroundAutoRefresh {
             // Every Claude child process is opaque to CodexBar's no-UI Keychain controls, including
-            // `claude auth status`. Background Auto therefore reuses only availability established by a
-            // successful user-initiated CLI fetch in this process; it never probes the CLI itself.
-            guard let binary = ClaudeCLIResolver.resolvedBinaryPath(environment: context.env),
-                  ClaudeCLIBackgroundAvailability.isEstablished(binary: binary)
-            else {
+            // `claude auth status`. Regular background Auto therefore reuses only availability established
+            // by a successful CLI fetch in this process; it never probes `claude auth status` itself.
+            guard let binary = ClaudeCLIResolver.resolvedBinaryPath(environment: context.env) else {
                 return false
             }
-            // Disable Keychain is a complete opt-out, so no prompt policy applies. With Keychain enabled,
-            // retain the explicit background opt-in introduced with the opaque-child safety gate.
-            return KeychainAccessGate.isExplicitlyDisabled
-                || ClaudeOAuthKeychainPromptPreference.storedMode() == .always
+
+            // Advanced → Disable Keychain access opts out of CodexBar Keychain use. OAuth/web cold-boot
+            // paths are empty without Keychain, so CLI (reading ~/.claude config files) must remain
+            // available on startup — matching Manual Refresh.
+            if KeychainAccessGate.isExplicitlyDisabled {
+                return true
+            }
+
+            // Initial app refresh uses the same availability shape as Manual Refresh so Claude is not
+            // stuck on "Not fetched yet" until the user clicks Refresh. Later timer ticks still require
+            // an established binary plus explicit Always prompt opt-in.
+            if ProviderRefreshContext.current == .startup {
+                return true
+            }
+
+            guard ClaudeCLIBackgroundAvailability.isEstablished(binary: binary) else {
+                return false
+            }
+            // With Keychain enabled, retain the explicit background opt-in introduced with the
+            // opaque-child safety gate.
+            return ClaudeOAuthKeychainPromptPreference.storedMode() == .always
         }
 
         // The interactive Claude REPL can open browser OAuth when it starts logged out. CLI-runtime paths
@@ -730,8 +745,9 @@ struct ClaudeCLIFetchStrategy: ProviderFetchStrategy {
             throw error
         }
         if context.runtime == .app,
-           ProviderInteractionContext.current == .userInitiated,
-           let binary
+           let binary,
+           ProviderInteractionContext.current == .userInitiated ||
+           ProviderRefreshContext.current == .startup
         {
             ClaudeCLIBackgroundAvailability.establish(binary: binary)
         }

@@ -257,7 +257,7 @@ struct ClaudeBaselineCharacterizationTests {
     }
 
     @Test
-    func `app background auto does not launch Claude CLI when Keychain access is disabled`() async throws {
+    func `app background auto allows Claude CLI when Keychain access is disabled`() async throws {
         let settings = ProviderSettingsSnapshot.make(claude: .init(
             usageDataSource: .auto,
             webExtrasEnabled: false,
@@ -275,14 +275,16 @@ struct ClaudeBaselineCharacterizationTests {
         let cliAvailable = await ClaudeCLIBackgroundAvailability.withIsolatedStoreForTesting {
             await KeychainAccessGate.withTaskOverrideForTesting(true) {
                 await ClaudeOAuthKeychainPromptPreference.withTaskOverrideForTesting(.always) {
-                    await ProviderInteractionContext.$current.withValue(.background) {
-                        await cli.isAvailable(context)
+                    await ProviderRefreshContext.$current.withValue(.regular) {
+                        await ProviderInteractionContext.$current.withValue(.background) {
+                            await cli.isAvailable(context)
+                        }
                     }
                 }
             }
         }
 
-        #expect(!cliAvailable)
+        #expect(cliAvailable)
         #expect(!FileManager.default.fileExists(atPath: invocationLog.path))
     }
 

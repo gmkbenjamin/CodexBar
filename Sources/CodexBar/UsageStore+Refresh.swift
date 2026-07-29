@@ -1,6 +1,27 @@
 import CodexBarCore
 import Foundation
 
+enum ClaudeBackgroundAutoRefreshFailure {
+    static func matches(
+        provider: UsageProvider,
+        error: Error,
+        source: ClaudeUsageDataSource,
+        interaction: ProviderInteraction,
+        keychainSettingsRequireUserAction: Bool) -> Bool
+    {
+        guard provider == .claude,
+              source == .auto,
+              interaction == .background,
+              keychainSettingsRequireUserAction,
+              let fetchError = error as? ProviderFetchError,
+              case .noAvailableStrategy(.claude) = fetchError
+        else {
+            return false
+        }
+        return true
+    }
+}
+
 extension UsageStore {
     nonisolated static func codexSessionQuotaOwnerKey(
         for refreshGuard: CodexAccountScopedRefreshGuard?) -> CodexSessionQuotaOwnerKey?
@@ -1036,6 +1057,21 @@ extension UsageStore {
                     self.failureGates[provider]?.reset()
                     return
                 }
+            }
+            let isClaudeBackgroundAutoUnavailable = ClaudeBackgroundAutoRefreshFailure.matches(
+                provider: provider,
+                error: error,
+                source: self.settings.claudeUsageDataSource,
+                interaction: ProviderInteractionContext.current,
+                keychainSettingsRequireUserAction: self.settings.debugDisableKeychainAccess ||
+                    self.settings.claudeOAuthKeychainPromptMode != .always)
+            if isClaudeBackgroundAutoUnavailable {
+                // Background Auto may intentionally have no safe Claude route when Keychain reads and CLI auth
+                // preflight are gated (and CLI background availability is only established after a successful
+                // user-initiated fetch in this process). Keep any last-good snapshot and stay quiet — do not
+                // sticky-error on every startup/timer tick. Manual Refresh still succeeds.
+                self.errors[provider] = nil
+                return
             }
             let hadKnownUnavailableLimits = self.knownLimitsAvailabilityByProvider[provider]?.isUnavailable == true
             self.knownLimitsAvailabilityByProvider.removeValue(forKey: provider)
