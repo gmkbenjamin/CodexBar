@@ -1,0 +1,12 @@
+HEAD=ff58e8a7
+Packaged CodexBar.app launched 2026-07-31T08:30:13Z
+debugDisableKeychainAccess=true
+process:
+68435 /Users/user/Downloads/CodexBar/CodexBar.app/Contents/MacOS/CodexBar
+--- confetti / weekly limit reset log search ---
+(no weekly-limit-reset / confetti matches)
+--- widget codex entry (redacted) ---
+generatedAt 2026-07-31T08:30:11Z
+{'provider': 'codex', 'updatedAt': '2026-07-31T08:30:02Z', 'usageRows': [{'id': 'weekly', 'title': 'Weekly', 'percentLeft': 44, 'window': {'resetDescription': '6 Aug at 09:02', 'resetsAt': '2026-08-05T23:02:04Z', 'windowMinutes': 10080, 'usedPercent': 56}}], 'secondary': {'resetDescription': '6 Aug at 09:02', 'resetsAt': '2026-08-05T23:02:04Z', 'usedPercent': 56, 'windowMinutes': 10080}}
+--- decision-path note ---
+Pre-boundary rolling preserve + stable intentional publish covered by focused tests in codex-false-reset-decision-paths-2026-07-31.txt (cannot safely force live rollover).
