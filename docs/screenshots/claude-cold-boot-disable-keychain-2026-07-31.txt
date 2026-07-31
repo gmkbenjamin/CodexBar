@@ -1,0 +1,19 @@
+HEAD=4e5fc9f4
+Packaged app: CodexBar.app (local release package)
+Settings: debugDisableKeychainAccess=true, claudeOAuthKeychainPromptMode=never
+Action: pkill CodexBar; open -n CodexBar.app (cold start, no Manual Refresh)
+
+Process stayed running (PID CodexBar).
+
+CLI after cold start (redacted):
+== Claude 2.1.220 (claude) ==
+Session: 100% left [============]
+Weekly: 75% left [=========---]
+
+Widget snapshot published after cold start (app-group widget-snapshot.json):
+- generatedAt: 2026-07-31T08:20:00Z
+- claude.updatedAt: 2026-07-31T08:19:54Z
+- Session percentLeft: 100
+- Weekly percentLeft: 75
+- No Keychain / authentication UI observed (Disable Keychain + prompt mode never)
+
