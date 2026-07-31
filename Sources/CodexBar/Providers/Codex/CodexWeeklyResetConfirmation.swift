@@ -17,7 +17,7 @@ struct CodexWeeklyResetConfirmation: Sendable {
     private static let resetEquivalenceToleranceSeconds: TimeInterval = 2 * 60
     private static let resetDueToleranceSeconds: TimeInterval = 2 * 60
     private static let stableBoundaryToleranceSeconds: TimeInterval = 0.5
-    private static let minimumBoundaryObservationSeconds: TimeInterval = 2
+    static let minimumBoundaryObservationSeconds: TimeInterval = 2
     private static let rollingBoundaryToleranceSeconds: TimeInterval = 2
     private static let weeklyWindowSeconds: TimeInterval = 7 * 24 * 60 * 60
     private static let resetThreshold = 1.0
