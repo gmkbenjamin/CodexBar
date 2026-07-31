@@ -62,7 +62,8 @@ extension UsageStore {
             guard !Task.isCancelled else { return nil }
             if confirmationAttempt > 0 {
                 do {
-                    try await Task.sleep(for: .seconds(2))
+                    try await Task.sleep(
+                        for: .seconds(CodexWeeklyResetConfirmation.minimumBoundaryObservationSeconds))
                 } catch {
                     return nil
                 }
