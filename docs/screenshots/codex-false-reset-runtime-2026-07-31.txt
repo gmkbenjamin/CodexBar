@@ -1,6 +1,6 @@
 Codex false-reset runtime note
-Head: b661a52567888d88f57b2fd469bf4fbdc417a19e (b661a525)
-Captured: 2026-08-02T01:00:36Z
+Head: cbdd279c18409f87a4eecfb0f1cadbd6a7fe6350 (cbdd279c) — behavior head; later commits are CHANGELOG/proof docs only
+Captured: 2026-08-02T11:07:50Z
 
 Packaged launch remains a normal idle path (cannot safely force a live weekly rollover in CI).
 Pre-boundary rolling preserve + stable preserve covered by focused tests in

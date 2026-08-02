@@ -7,6 +7,7 @@
 - Menu: the compact multi-account layout now covers every stacked multi-account list — token accounts on any provider and Codex accounts (flat lists; workspace-grouped Codex lists keep their sections).
 
 ### Fixed
+- Codex: hold confirmed early weekly lows until the previously published reset boundary is due, so a rolling or stable boundary can no longer publish a premature full gauge or fire reset confetti before the week actually rolls over. Close or indeterminate observations request a delayed confirmation and preserve the previous snapshot if still early (#2482, fixes #2481). Thanks @gmkbenjamin!
 - OpenCode Go: read idle WAL-mode local history without creating SQLite sidecars (#2544). Thanks @Astro-Han for the report!
 - Keychain: stop "CodexBar Cache" login-keychain password prompts from dev and test tooling. Unbundled processes (`swift build` binaries, dev CLI runs) now use a process-local cache instead of the shared keychain item, never freeze a broken trusted-app ACL onto it, and test-blocked processes disable legacy keychain interaction process-wide and export the suppression flag to spawned child binaries.
 - MiMo/StepFun: feed monthly token-plan windows into usage history, pace, and forecasts (#2526, part of #2431). Thanks @LeoLin990405!
