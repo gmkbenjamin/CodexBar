@@ -5,6 +5,7 @@
 ### Added
 - Claude: compact multi-account menu for claude-swap — with four or more accounts the active account keeps its full card while the others become one-line rows sorted by remaining headroom, constrained accounts surface in red/amber, the healthiest switch target gets a star, and the healthy tail folds behind a summary row. Click a row to expand its full card.
 - Menu: the compact multi-account layout now covers every stacked multi-account list — token accounts on any provider and Codex accounts (flat lists; workspace-grouped Codex lists keep their sections).
+- Menu: optional "Show upcoming resets" setting (off by default) that appends the next projected reset boundaries after the current one for fixed rolling quotas (1h, 4h, 5h, daily, weekly), using the existing Reset times countdown or absolute style. The same setting also extends `codexbar usage` text and card output. Billing-cycle windows that only report a window length are not projected (#2468). Thanks @gmkbenjamin!
 
 ### Fixed
 - OpenCode Go: read idle WAL-mode local history without creating SQLite sidecars (#2544). Thanks @Astro-Han for the report!
