@@ -425,7 +425,7 @@ extension CodexAccountScopedRefreshTests {
     }
 
     @Test
-    func `stable intentional weekly reset publishes before the prior boundary`() async {
+    func `stable intentional weekly reset before the prior boundary preserves previous`() async {
         let suite = "CodexWeeklyResetPublicationTests-stable-intentional-reset"
         let email = "stable-intentional-reset@example.com"
         let settings = self.makeSettingsStore(suite: suite)
@@ -471,11 +471,11 @@ extension CodexAccountScopedRefreshTests {
         await store.refreshProvider(.codex, allowDisabled: true)
 
         #expect(await loader.callCount == 2)
-        #expect(store.snapshots[.codex]?.updatedAt == confirmedLow.updatedAt)
-        #expect(store.snapshots[.codex]?.secondary?.usedPercent == 0)
-        #expect(store.lastKnownResetSnapshots[.codex]?.updatedAt == confirmedLow.updatedAt)
-        #expect(store.planUtilizationHistoryRevision > priorRevision)
-        #expect(recorder.usedPercents == [0])
+        #expect(store.snapshots[.codex]?.updatedAt == prior.updatedAt)
+        #expect(store.snapshots[.codex]?.secondary?.usedPercent == 100)
+        #expect(store.lastKnownResetSnapshots[.codex]?.updatedAt == prior.updatedAt)
+        #expect(store.planUtilizationHistoryRevision == priorRevision)
+        #expect(recorder.usedPercents.isEmpty)
     }
 
     @Test(arguments: CodexRejectedConfirmationCase.allCases)

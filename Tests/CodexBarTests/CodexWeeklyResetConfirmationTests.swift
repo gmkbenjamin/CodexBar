@@ -271,7 +271,7 @@ struct CodexWeeklyResetConfirmationTests {
     }
 
     @Test
-    func `stable intentional reset before prior boundary publishes`() throws {
+    func `stable intentional reset before prior boundary preserves previous`() throws {
         let formatter = ISO8601DateFormatter()
         let previousCapturedAt = try #require(formatter.date(from: "2026-07-30T10:00:00Z"))
         let previousReset = try #require(formatter.date(from: "2026-08-04T19:21:00Z"))
@@ -298,7 +298,7 @@ struct CodexWeeklyResetConfirmationTests {
                 previous: previous,
                 initial: initial,
                 confirmation: confirmation)
-                == .publishConfirmation)
+                == .preservePrevious)
     }
 
     @Test
@@ -327,7 +327,7 @@ struct CodexWeeklyResetConfirmationTests {
                 previous: previous,
                 initial: initial,
                 confirmation: delayedConfirmation)
-                == .publishConfirmation)
+                == .preservePrevious)
     }
 
     @Test

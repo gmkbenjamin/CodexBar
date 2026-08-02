@@ -161,9 +161,9 @@ struct CodexWeeklyResetConfirmation: Sendable {
                     confirmationBoundary: confirmationBoundary,
                     confirmationCapturedAt: confirmation.updatedAt)
                 {
-                case .stable:
-                    break
-                case .rolling:
+                case .stable, .rolling:
+                    // Prior boundary is the publication gate for every confirmed early weekly low,
+                    // including fixed/stable boundaries — matches #2481's contract.
                     return .preservePrevious
                 case .indeterminate:
                     return .requiresDelayedConfirmation
