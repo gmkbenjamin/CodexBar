@@ -1,6 +1,6 @@
 Codex false-reset decision-path proof
-Head: b661a52567888d88f57b2fd469bf4fbdc417a19e (b661a525)
-Captured: 2026-08-02T01:00:36Z
+Head: cbdd279c18409f87a4eecfb0f1cadbd6a7fe6350 (cbdd279c) — behavior head; later commits are CHANGELOG/proof docs only
+Captured: 2026-08-02T11:07:50Z
 Command: swift test --disable-automatic-resolution --filter 'CodexWeeklyResetConfirmationTests|CodexWeeklyResetPublicationTests'
 
 Contract: confirmed weekly lows publish only after the previously published reset boundary is due.
@@ -13,6 +13,6 @@ Focused results:
 ✔ Test "stable intentional reset before prior boundary preserves previous" passed after 0.002 seconds.
 ✔ Test "matching rolling boundary before prior reset preserves the previous snapshot" passed after 0.002 seconds.
 ✔ Suite CodexWeeklyResetConfirmationTests passed after 0.002 seconds.
-✔ Test "matching weekly lows before the prior reset remain private" passed after 0.009 seconds.
-✔ Test "stable intentional weekly reset before the prior boundary preserves previous" passed after 0.009 seconds.
-✔ Test run with 29 tests in 2 suites passed after 0.292 seconds.
+✔ Test "matching weekly lows before the prior reset remain private" passed after 0.007 seconds.
+✔ Test "stable intentional weekly reset before the prior boundary preserves previous" passed after 0.007 seconds.
+✔ Test run with 29 tests in 2 suites passed after 0.274 seconds.
