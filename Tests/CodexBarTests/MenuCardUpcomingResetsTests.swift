@@ -145,11 +145,16 @@ struct MenuCardUpcomingResetsTests {
             hidePersonalInfo: false,
             now: now))
 
+        // Assert the card composition (primary line + "Then" schedule) structurally rather than
+        // against separately formatted stamps: UsageFormatter's locale provider is process-global
+        // and UsageFormatterTests mutates it concurrently, so re-deriving a stamp here races.
+        // Absolute stamp formatting itself is covered by UsageFormatterTests.
         let resetText = try #require(model.metrics.first?.resetText)
-        let primaryStamp = UsageFormatter.resetDescription(from: reset, now: now)
-        let nextStamp = UsageFormatter.resetTimestampDescription(from: reset.addingTimeInterval(5 * 3600))
-        #expect(resetText.hasPrefix("Resets \(primaryStamp)\nThen "))
-        #expect(resetText.contains(nextStamp))
+        let lines = resetText.split(separator: "\n", omittingEmptySubsequences: false)
+        #expect(lines.count == 2)
+        #expect(lines.first?.hasPrefix("Resets ") == true)
+        #expect(lines.last?.hasPrefix("Then ") == true)
         #expect(!resetText.contains("Resets in"))
+        #expect(lines.last?.contains(" · ") == true)
     }
 }
