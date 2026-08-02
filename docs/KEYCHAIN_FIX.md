@@ -101,9 +101,11 @@ Effects:
 - Clears that in-process fallback whenever Keychain access is toggled, so disabled-mode cookies cannot resurface after re-enabling Keychain.
 - Allows Claude Auto **background** CLI when Keychain access is disabled (including cold boot) without requiring a
   prior user-initiated Refresh, matching Manual Refresh availability and skipping `claude auth status --json`.
-  When Keychain remains enabled, the initial **startup** refresh also allows CLI so Claude is not empty until the
-  user clicks Refresh; later timer ticks still require a successful CLI fetch in this process plus prompt mode
-  **Always**.
+  This is an explicit opt-out: Disable Keychain access authorizes opaque Claude CLI children during automatic
+  startup/timer refreshes because OAuth/web cold-boot paths are empty without Keychain.
+- When Keychain remains enabled, background Auto (startup and later timer ticks) still requires an established
+  CLI binary in this process plus prompt mode **Always**. Restrictive Keychain modes keep last-good usage quiet
+  when no safe Claude route is available; Disable Keychain surfaces a real no-strategy error instead.
 
 ## Verification
 

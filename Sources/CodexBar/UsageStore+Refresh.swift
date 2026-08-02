@@ -1058,12 +1058,15 @@ extension UsageStore {
                     return
                 }
             }
+            // Quiet preservation is only for Keychain-enabled restrictive modes, where background Auto
+            // intentionally defers Claude CLI. Disable Keychain already authorizes background CLI, so a
+            // genuine .noAvailableStrategy there must remain visible (not "Not fetched yet").
             let isClaudeBackgroundAutoUnavailable = ClaudeBackgroundAutoRefreshFailure.matches(
                 provider: provider,
                 error: error,
                 source: self.settings.claudeUsageDataSource,
                 interaction: ProviderInteractionContext.current,
-                keychainSettingsRequireUserAction: self.settings.debugDisableKeychainAccess ||
+                keychainSettingsRequireUserAction: !self.settings.debugDisableKeychainAccess &&
                     self.settings.claudeOAuthKeychainPromptMode != .always)
             if isClaudeBackgroundAutoUnavailable {
                 // Background Auto may intentionally have no safe Claude route when Keychain reads and CLI auth

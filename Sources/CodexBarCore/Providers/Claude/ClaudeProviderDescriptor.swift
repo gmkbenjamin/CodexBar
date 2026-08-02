@@ -694,23 +694,17 @@ struct ClaudeCLIFetchStrategy: ProviderFetchStrategy {
 
             // Advanced → Disable Keychain access opts out of CodexBar Keychain use. OAuth/web cold-boot
             // paths are empty without Keychain, so CLI (reading ~/.claude config files) must remain
-            // available on startup — matching Manual Refresh.
+            // available without a prior Manual Refresh — including startup.
             if KeychainAccessGate.isExplicitlyDisabled {
                 return true
             }
 
-            // Initial app refresh uses the same availability shape as Manual Refresh so Claude is not
-            // stuck on "Not fetched yet" until the user clicks Refresh. Later timer ticks still require
-            // an established binary plus explicit Always prompt opt-in.
-            if ProviderRefreshContext.current == .startup {
-                return true
-            }
-
+            // With Keychain enabled, Claude CLI is an opaque child CodexBar cannot keep prompt-free.
+            // Keep Peter's established-binary + Always gate for all background refreshes (startup and
+            // later timer ticks). Do not treat startup as Manual Refresh here.
             guard ClaudeCLIBackgroundAvailability.isEstablished(binary: binary) else {
                 return false
             }
-            // With Keychain enabled, retain the explicit background opt-in introduced with the
-            // opaque-child safety gate.
             return ClaudeOAuthKeychainPromptPreference.storedMode() == .always
         }
 
@@ -745,9 +739,8 @@ struct ClaudeCLIFetchStrategy: ProviderFetchStrategy {
             throw error
         }
         if context.runtime == .app,
-           let binary,
-           ProviderInteractionContext.current == .userInitiated ||
-           ProviderRefreshContext.current == .startup
+           ProviderInteractionContext.current == .userInitiated,
+           let binary
         {
             ClaudeCLIBackgroundAvailability.establish(binary: binary)
         }

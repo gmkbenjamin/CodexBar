@@ -157,6 +157,59 @@ struct ClaudeBackgroundAutoRefreshFailureTests {
             keychainSettingsRequireUserAction: false))
     }
 
+    @Test
+    func `Disable Keychain background Auto surfaces no-strategy instead of staying quiet`() async throws {
+        try await ClaudeOAuthCredentialsStore.withIsolatedCredentialsFileTrackingForTesting {
+            let missingCredentialsURL = FileManager.default.temporaryDirectory
+                .appendingPathComponent("missing-claude-creds-\(UUID().uuidString).json")
+
+            try await ClaudeOAuthCredentialsStore.withCredentialsURLOverrideForTesting(missingCredentialsURL) {
+                try await KeychainAccessGate.withTaskOverrideForTesting(true) {
+                    let store = try await MainActor.run {
+                        let settings = Self.makeSettingsStore(
+                            suite: "ClaudeBackgroundAutoRefreshFailureTests-disable-keychain-error")
+                        settings.refreshFrequency = .manual
+                        settings.statusChecksEnabled = false
+                        settings.claudeUsageDataSource = .auto
+                        settings.debugDisableKeychainAccess = true
+                        settings.claudeOAuthKeychainPromptMode = .onlyOnUserAction
+
+                        let metadata = ProviderRegistry.shared.metadata
+                        for provider in UsageProvider.allCases {
+                            try settings.setProviderEnabled(
+                                provider: provider,
+                                metadata: #require(metadata[provider]),
+                                enabled: provider == .claude)
+                        }
+
+                        let store = UsageStore(
+                            fetcher: UsageFetcher(environment: [:]),
+                            browserDetection: BrowserDetection(cacheTTL: 0),
+                            settings: settings,
+                            startupBehavior: .testing,
+                            environmentBase: [:])
+                        store._test_providerFetchOutcomeOverride = { _ in
+                            Self.unavailableClaudeOutcome()
+                        }
+                        return store
+                    }
+
+                    await ProviderInteractionContext.$current.withValue(.background) {
+                        await store.refreshProvider(.claude)
+                    }
+
+                    let result = await MainActor.run {
+                        (
+                            snapshot: store.snapshot(for: .claude),
+                            error: store.error(for: .claude))
+                    }
+                    #expect(result.snapshot == nil)
+                    #expect(result.error != nil)
+                }
+            }
+        }
+    }
+
     @MainActor
     private static func makeSettingsStore(suite: String) -> SettingsStore {
         let defaults = UserDefaults(suiteName: suite)!
