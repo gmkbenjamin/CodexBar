@@ -7,6 +7,7 @@
 - Menu: the compact multi-account layout now covers every stacked multi-account list — token accounts on any provider and Codex accounts (flat lists; workspace-grouped Codex lists keep their sections).
 
 ### Fixed
+- Claude: with Advanced → Disable Keychain access enabled, Auto refresh can use the Claude CLI on cold boot and on later background ticks without a prior manual refresh, so usage loads when the OAuth and web paths are empty. Keychain-enabled setups keep the existing established-binary and Always-prompt gate, and a Disable Keychain run with no resolved route now surfaces a real error instead of a quiet "Not fetched yet" (#2494, fixes #2493). Thanks @gmkbenjamin!
 - OpenCode Go: read idle WAL-mode local history without creating SQLite sidecars (#2544). Thanks @Astro-Han for the report!
 - Keychain: stop "CodexBar Cache" login-keychain password prompts from dev and test tooling. Unbundled processes (`swift build` binaries, dev CLI runs) now use a process-local cache instead of the shared keychain item, never freeze a broken trusted-app ACL onto it, and test-blocked processes disable legacy keychain interaction process-wide and export the suppression flag to spawned child binaries.
 - MiMo/StepFun: feed monthly token-plan windows into usage history, pace, and forecasts (#2526, part of #2431). Thanks @LeoLin990405!
