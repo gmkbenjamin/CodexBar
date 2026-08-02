@@ -24,12 +24,32 @@ struct ClaudeCLIBackgroundAvailabilityTests {
     }
 
     @Test
-    func `startup background Auto CLI is available without prior establishment`() async {
+    func `startup background Auto CLI stays gated when Keychain is enabled`() async {
         let strategy = self.makeStrategy()
         let context = self.makeContext()
 
         await ClaudeCLIBackgroundAvailability.withIsolatedStoreForTesting {
             await KeychainAccessGate.withTaskOverrideForTesting(false) {
+                await ClaudeOAuthKeychainPromptPreference.withTaskOverrideForTesting(.onlyOnUserAction) {
+                    await ClaudeCLIResolver.withResolvedBinaryPathOverrideForTesting("/bin/echo") {
+                        await ProviderRefreshContext.$current.withValue(.startup) {
+                            await ProviderInteractionContext.$current.withValue(.background) {
+                                #expect(await !strategy.isAvailable(context))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    func `disabled Keychain allows startup background Auto CLI without prior establishment`() async {
+        let strategy = self.makeStrategy()
+        let context = self.makeContext()
+
+        await ClaudeCLIBackgroundAvailability.withIsolatedStoreForTesting {
+            await KeychainAccessGate.withTaskOverrideForTesting(true) {
                 await ClaudeOAuthKeychainPromptPreference.withTaskOverrideForTesting(.onlyOnUserAction) {
                     await ClaudeCLIResolver.withResolvedBinaryPathOverrideForTesting("/bin/echo") {
                         await ProviderRefreshContext.$current.withValue(.startup) {
