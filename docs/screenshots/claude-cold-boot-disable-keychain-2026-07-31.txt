@@ -1,3 +1,5 @@
+Merge-ready follow-up head: a3f43830258a15030e824552456783e9fa8eac0c (a3f43830) — quiet-failure narrowed; Disable Keychain cold-boot path unchanged from packaged proof below.
+
 HEAD=4e5fc9f4
 Packaged app: CodexBar.app (local release package)
 Settings: debugDisableKeychainAccess=true, claudeOAuthKeychainPromptMode=never
