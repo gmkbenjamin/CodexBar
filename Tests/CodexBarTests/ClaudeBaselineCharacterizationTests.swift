@@ -236,19 +236,29 @@ struct ClaudeBaselineCharacterizationTests {
             manualCookieHeader: nil))
         let invocationLog = FileManager.default.temporaryDirectory
             .appendingPathComponent("claude-invocations-\(UUID().uuidString).log")
-        let stubCLIPath = try self.makeStubClaudeCLI(invocationLog: invocationLog)
+        let stubCLIPath = try self.makeStubClaudeCLI(loggedIn: false, invocationLog: invocationLog)
         let env = ["CLAUDE_CLI_PATH": stubCLIPath]
 
-        await ClaudeOAuthKeychainReadStrategyPreference.withTaskOverrideForTesting(.securityCLIExperimental) {
-            await ClaudeOAuthKeychainPromptPreference.withTaskOverrideForTesting(.onlyOnUserAction) {
-                await self.withNoOAuthCredentials {
-                    let outcome = await self.fetchOutcome(
-                        runtime: .app,
-                        sourceMode: .auto,
-                        env: env,
-                        settings: settings)
-                    #expect(outcome.attempts.map(\.strategyID) == ["claude.oauth", "claude.cli", "claude.web"])
-                    #expect(outcome.attempts.map(\.wasAvailable) == [false, false, false])
+        // Pin Keychain-enabled + an empty availability store so a leaked process-force-disable or
+        // established binary from another suite cannot make Claude CLI look cold-boot-safe here.
+        await ClaudeCLIBackgroundAvailability.withIsolatedStoreForTesting {
+            await self.withBackgroundKeychainAccess {
+                await ClaudeOAuthKeychainReadStrategyPreference.withTaskOverrideForTesting(.securityCLIExperimental) {
+                    await ClaudeOAuthKeychainPromptPreference.withTaskOverrideForTesting(.onlyOnUserAction) {
+                        await self.withNoOAuthCredentials {
+                            let outcome = await self.fetchOutcome(
+                                runtime: .app,
+                                sourceMode: .auto,
+                                env: env,
+                                settings: settings)
+                            #expect(outcome.attempts.map(\.strategyID) == [
+                                "claude.oauth",
+                                "claude.cli",
+                                "claude.web",
+                            ])
+                            #expect(outcome.attempts.map(\.wasAvailable) == [false, false, false])
+                        }
+                    }
                 }
             }
         }
