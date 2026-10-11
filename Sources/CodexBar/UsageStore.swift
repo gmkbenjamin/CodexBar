@@ -73,6 +73,7 @@ extension UsageStore {
                 self.observeSettingsChanges()
                 self.providerAvailabilityCache.removeAll(keepingCapacity: true)
                 self.probeLogs = [:]
+                self.reconcileGrokBotUsageOwnership()
                 guard self.startupBehavior.automaticallyStartsBackgroundWork else { return }
                 self.retireDisabledCredentialNotifications()
                 self.startTimer()

@@ -26,7 +26,7 @@ struct GrokBotSettingsTests {
         fixture.settings.cursorCookieSource = .off
         let disabled = ProviderRegistry.makeSettingsSnapshot(settings: fixture.settings, tokenOverride: nil)
         #expect(disabled.cursor?.cookieSource == .off)
-        #expect(disabled.grok?.grokBotCursorCookieSource == nil)
+        #expect(disabled.grok?.grokBotCursorCookieSource == .off)
 
         fixture.settings.cursorCookieSource = .auto
         fixture.settings.cursorCookieHeader = "WorkosCursorSessionToken=explicit-fixture"
@@ -63,6 +63,7 @@ struct GrokBotSettingsTests {
                 id: CursorSandUsageStatus.extraWindowID,
                 title: CursorSandUsageStatus.extraWindowTitle,
                 window: RateWindow(usedPercent: 42, windowMinutes: nil, resetsAt: nil, resetDescription: nil))],
+            grokBotCredentialScope: fixture.settings.grokBotCredentialScope,
             updatedAt: Date())
         #expect(fixture.store.snapshot(for: .grok)?.extraRateWindows?.count == 1)
         toggle.binding.wrappedValue = false

@@ -1,0 +1,6 @@
+{"entryPoint": "CodexBar.app/Contents/Helpers/CodexBarCLI", "version": "0.74.1", "build": "debug-adhoc-arm64", "capturedAt": "2026-10-11T05:23:18.155872+00:00", "binarySha256": "1d339616acb015545a93fcc4cc4b7f1ba16c1d351485531567c4910241fb805b"}
+{"case": "opt-in", "exitCode": 0, "cursorTrackingEnabled": false, "grokBotUsageEnabled": true, "nativeGrokUsagePresent": true, "botPresent": true, "botUsageKnown": true, "botResetPresent": true}
+{"case": "opt-out", "exitCode": 0, "cursorTrackingEnabled": false, "grokBotUsageEnabled": false, "nativeGrokUsagePresent": true, "botPresent": false}
+{"case": "optional-failure", "exitCode": 0, "cursorTrackingEnabled": false, "grokBotUsageEnabled": true, "nativeGrokUsagePresent": true, "botPresent": true, "botUsageKnown": false, "botResetPresent": false, "diagnostic": "Grok Bot needs the linked Cursor account. Sign in under Cursor settings."}
+{"case": "replacement-account-unavailable", "exitCode": 0, "cursorTrackingEnabled": false, "grokBotUsageEnabled": true, "nativeGrokUsagePresent": true, "botPresent": true, "botUsageKnown": false, "botResetPresent": false}
+{"originalConfigUnchanged": true, "identitiesCredentialsPercentagesAndRawResponsesExcluded": true}

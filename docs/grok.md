@@ -42,7 +42,10 @@ Only the Bot usage endpoint is fetched. Normal Grok billing remains authoritativ
 subscription bars, balance, identity, and reset credits. A failed optional Bot lookup shows an
 unavailable Bot row without failing successful Grok billing; an unavailable reading is never 0%.
 If Grok billing is unavailable but Bot usage works, the card can show the Bot allowance alone.
-Disabling the option stops Bot lookups and removes its row. CLI configuration uses
+Disabling the option stops Bot lookups and removes its row. Changing the selected Cursor account,
+credential, or source removes the old Bot reading immediately, including saved-account readings.
+Late responses from the previous linked account are discarded; Grok subscription usage stays intact.
+Transient lookup diagnostics suggest refreshing again. CLI configuration uses
 `"grokBotUsageEnabled": true` on the `grok` provider entry, with the independent `cursor` entry
 supplying the Bot account. The Bot lookup has a six-second overall wait budget.
 

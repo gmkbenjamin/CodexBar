@@ -1,0 +1,17 @@
+Feature head: 224e2efd6ee687bc6a58c4106f1e1a68a557590b
+Command: make test-fast FILTER=GrokBotOwnershipTests
+Exit status: 2
+
+✘ Test "switching Cursor accounts hides only Bot usage even when the next refresh times out" recorded an issue at GrokBotOwnershipTests.swift:97:9: Expectation failed: snapshot?.extraRateWindows?.contains { $0.id == CursorSandUsageStatus.extraWindowID } != true
+✘ Test "switching Cursor accounts hides only Bot usage even when the next refresh times out" recorded an issue at GrokBotOwnershipTests.swift:97:9: Expectation failed: snapshot?.extraRateWindows?.contains { $0.id == CursorSandUsageStatus.extraWindowID } != true
+✘ Test "switching Cursor accounts hides only Bot usage even when the next refresh times out" recorded an issue at GrokBotOwnershipTests.swift:97:9: Expectation failed: snapshot?.extraRateWindows?.contains { $0.id == CursorSandUsageStatus.extraWindowID } != true
+✘ Test "switching Cursor accounts hides only Bot usage even when the next refresh times out" recorded an issue at GrokBotOwnershipTests.swift:97:9: Expectation failed: snapshot?.extraRateWindows?.contains { $0.id == CursorSandUsageStatus.extraWindowID } != true
+✘ Test "switching Cursor accounts hides only Bot usage even when the next refresh times out" failed after 0.251 seconds with 4 issues.
+✘ Test "a Cursor account change rejects a suspended Grok refresh result" recorded an issue at GrokBotOwnershipTests.swift:95:9: Expectation failed: snapshot?.primary?.usedPercent == 23
+✘ Test "a Cursor account change rejects a suspended Grok refresh result" recorded an issue at GrokBotOwnershipTests.swift:97:9: Expectation failed: snapshot?.extraRateWindows?.contains { $0.id == CursorSandUsageStatus.extraWindowID } != true
+✘ Test "a Cursor account change rejects a suspended Grok refresh result" failed after 0.077 seconds with 2 issues.
+✘ Test "changing the linked Cursor source immediately hides the old Bot reading" recorded an issue with 1 argument source → .off at GrokBotOwnershipTests.swift:97:9: Expectation failed: snapshot?.extraRateWindows?.contains { $0.id == CursorSandUsageStatus.extraWindowID } != true
+✘ Test "changing the linked Cursor source immediately hides the old Bot reading" recorded an issue with 1 argument source → .auto at GrokBotOwnershipTests.swift:97:9: Expectation failed: snapshot?.extraRateWindows?.contains { $0.id == CursorSandUsageStatus.extraWindowID } != true
+✘ Test "changing the linked Cursor source immediately hides the old Bot reading" with 2 test cases failed after 0.135 seconds with 2 issues.
+✘ Suite GrokBotOwnershipTests failed after 0.465 seconds with 8 issues.
+✘ Test run with 3 tests in 1 suite failed after 0.465 seconds with 8 issues.

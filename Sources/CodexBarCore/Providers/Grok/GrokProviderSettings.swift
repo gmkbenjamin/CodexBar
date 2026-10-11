@@ -5,7 +5,7 @@ public struct GrokProviderSettings: ProviderCookieSettings {
     public let manualCookieHeader: String?
     public let grokBotUsageEnabled: Bool
     public let grokBotSourceMode: ProviderSourceMode
-    /// Restores automatic local-session routing when the app's no-Keychain setting masks cookies as manual.
+    /// Preserves explicit Off and automatic local-session routing when shared settings resolve cookies as manual.
     public let grokBotCursorCookieSource: ProviderCookieSource?
 
     public init(cookieSource: ProviderCookieSource, manualCookieHeader: String?) {

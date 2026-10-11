@@ -7,13 +7,7 @@ extension UsageStore {
         self.invalidateGenericWidgetUsage(for: provider)
         self.tokenAccountLiveStateProviders.insert(provider.instanceID)
         guard let account = self.uniqueTokenAccount(provider: provider, accountID: accountID),
-              let cached = self.accountSnapshots[provider.instanceID]?.first(where: {
-                  $0.account.id == accountID
-                      && $0.cacheKey
-                      == self.tokenAccountSnapshotCacheKey(
-                          provider: provider,
-                          account: account)
-              })
+              let cached = self.validTokenAccountSnapshots(provider: provider, accounts: [account]).first
         else {
             self.accountSnapshots[provider.instanceID]?.removeAll { $0.account.id == accountID }
             self.knownLimitsAvailabilityByProvider.removeValue(forKey: provider.instanceID)
@@ -58,7 +52,7 @@ extension UsageStore {
         }
         let cached = TokenAccountUsageSnapshot(
             account: account,
-            snapshot: snapshot,
+            snapshot: self.settings.grokBotUsageFilteredSnapshot(snapshot, provider: provider.instanceID),
             error: nil,
             sourceLabel: sourceLabel,
             cacheKey: self.tokenAccountSnapshotCacheKey(provider: provider, account: account))
@@ -116,7 +110,7 @@ extension UsageStore {
         return (self.accountSnapshots[provider.instanceID] ?? []).filter { cached in
             guard let account = accountsByID[cached.account.id] else { return false }
             return cached.cacheKey == self.tokenAccountSnapshotCacheKey(provider: provider, account: account)
-        }
+        }.map { self.grokBotUsageFilteredAccountSnapshot($0, provider: provider) }
     }
 
     func uniqueTokenAccount(provider: UsageProvider, accountID: UUID) -> ProviderTokenAccount? {

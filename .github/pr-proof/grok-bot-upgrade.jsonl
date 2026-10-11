@@ -1,0 +1,2 @@
+{"case": "upgrade-from-0.74.0", "validationExitCode": 0, "normalizedConfigByteIdentical": true, "savedGrokAccounts": 2, "savedCursorAccounts": 1, "activeGrokAccountIndex": 1, "cursorTrackingEnabled": false, "botOptInOmitted": true, "sha256": "d605e3089284b58a7527b42e6c02b09a70a1b1777ae4a39068bb0bd0e1020374"}
+{"case": "opt-in-resave-and-stable-readback", "newOptionalSettingPreserved": true, "allExistingFieldsAndAccountsPreserved": true, "configVersion": 1}

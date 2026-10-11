@@ -52,14 +52,16 @@ package struct GrokBotUsageEnrichment: ProviderFetchStrategy {
         case .timedOut:
             guard result != nil else { throw URLError(.timedOut) }
             window = Self.unavailableWindow
-            botDiagnostic = "Grok Bot lookup timed out."
+            botDiagnostic = Self.failureDiagnostic(URLError(.timedOut))
         }
         if let result {
             let clean = Self.removingBotUsage(from: result.usage)
             let diagnostic = [result.diagnostic, botDiagnostic].compactMap(\.self).joined(separator: " ")
             return result.replacing(
                 usage: clean.replacing(
-                    extraRateWindows: .value((clean.extraRateWindows ?? []) + [window])),
+                    extraRateWindows: .value((clean.extraRateWindows ?? []) + [window]),
+                    grokBotCredentialScope: .value(Self.credentialScope(
+                        cursor: context.settings?.cursor, grok: context.settings?.grok))),
                 diagnostic: diagnostic.isEmpty ? nil : diagnostic)
         }
         return self.makeResult(
@@ -68,6 +70,8 @@ package struct GrokBotUsageEnrichment: ProviderFetchStrategy {
                 secondary: nil,
                 tertiary: nil,
                 extraRateWindows: [window],
+                grokBotCredentialScope: Self.credentialScope(
+                    cursor: context.settings?.cursor, grok: context.settings?.grok),
                 updatedAt: Date()),
             sourceLabel: "grok-bot-cursor",
             diagnostic: "Grok subscription usage is unavailable. Showing Grok Bot's linked Cursor allowance only.")
@@ -85,7 +89,23 @@ package struct GrokBotUsageEnrichment: ProviderFetchStrategy {
 
     package static func removingBotUsage(from usage: UsageSnapshot) -> UsageSnapshot {
         let extras = usage.extraRateWindows?.filter { $0.id != CursorSandUsageStatus.extraWindowID }
-        return usage.replacing(extraRateWindows: .value(extras?.isEmpty == false ? extras : nil))
+        return usage.replacing(
+            extraRateWindows: .value(extras?.isEmpty == false ? extras : nil),
+            grokBotCredentialScope: .value(nil))
+    }
+
+    package static func credentialScope(
+        cursor: CursorProviderSettings?,
+        grok: GrokProviderSettings?) -> String
+    {
+        let components = [
+            cursor?.cookieSource.rawValue ?? ProviderCookieSource.auto.rawValue,
+            (CookieHeaderNormalizer.normalize(cursor?.manualCookieHeader)).map(
+                CookieHeaderCache.credentialFingerprint) ?? "",
+            grok?.grokBotSourceMode.rawValue ?? ProviderSourceMode.auto.rawValue,
+            grok?.grokBotCursorCookieSource?.rawValue ?? "",
+        ]
+        return components.joined(separator: "|")
     }
 
     private static var unavailableWindow: NamedRateWindow {
@@ -97,7 +117,7 @@ package struct GrokBotUsageEnrichment: ProviderFetchStrategy {
     }
 
     private static func failureDiagnostic(_ error: Error) -> String {
-        if (error as? URLError)?.code == .timedOut { return "Grok Bot lookup timed out." }
+        if (error as? URLError)?.code == .timedOut { return "Grok Bot lookup timed out. Try refreshing again." }
         if let error = error as? CursorStatusProbeError {
             switch error {
             case .noSessionCookie:
@@ -105,10 +125,10 @@ package struct GrokBotUsageEnrichment: ProviderFetchStrategy {
             case .notLoggedIn:
                 return "Grok Bot's linked Cursor session expired. Sign in again under Cursor settings."
             case .parseFailed:
-                return "Grok Bot's linked Cursor account did not return a readable allowance."
+                return "Grok Bot's linked Cursor account did not return a readable allowance. Try refreshing again."
             case let .networkError(message):
                 if message.hasPrefix("HTTP "), let status = Int(message.dropFirst(5)), (100...599).contains(status) {
-                    return "Grok Bot lookup failed (HTTP \(status))."
+                    return "Grok Bot lookup failed (HTTP \(status)). Try refreshing again."
                 }
             default:
                 break

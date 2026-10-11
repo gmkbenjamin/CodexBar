@@ -165,6 +165,8 @@ public struct UsageSnapshot: Codable, Sendable {
     public let codexResetCredits: CodexRateLimitResetCreditsSnapshot?
     /// Live-only display inventory. Grok redemption token identifiers are intentionally excluded.
     public let grokResetCredits: GrokRateLimitResetCreditsSnapshot?
+    /// Live-only scope of the Cursor credentials used for Grok Bot enrichment.
+    package let grokBotCredentialScope: String?
     /// Live-only display inventory. Claude grant identifiers are never decoded.
     public let claudeResetCredits: ClaudeRateLimitResetCreditsSnapshot?
     public let mistralUsage: MistralUsageSnapshot?
@@ -223,6 +225,7 @@ public struct UsageSnapshot: Codable, Sendable {
         openAIAPIUsage: OpenAIAPIUsageSnapshot? = nil,
         codexResetCredits: CodexRateLimitResetCreditsSnapshot? = nil,
         grokResetCredits: GrokRateLimitResetCreditsSnapshot? = nil,
+        grokBotCredentialScope: String? = nil,
         claudeResetCredits: ClaudeRateLimitResetCreditsSnapshot? = nil,
         mistralUsage: MistralUsageSnapshot? = nil,
         copilotMeteredZeroCredits: Bool = false,
@@ -255,6 +258,7 @@ public struct UsageSnapshot: Codable, Sendable {
         self.openAIAPIUsage = openAIAPIUsage
         self.codexResetCredits = codexResetCredits
         self.grokResetCredits = grokResetCredits
+        self.grokBotCredentialScope = grokBotCredentialScope
         self.claudeResetCredits = claudeResetCredits
         self.mistralUsage = mistralUsage
         self.copilotMeteredZeroCredits = copilotMeteredZeroCredits
@@ -366,6 +370,7 @@ public struct UsageSnapshot: Codable, Sendable {
             CodexRateLimitResetCreditsSnapshot.self,
             forKey: .codexResetCredits)
         self.grokResetCredits = nil // Live-only inventory; refresh without persisting redemption state.
+        self.grokBotCredentialScope = nil // Decoded Bot windows cannot prove linked account ownership.
         self.claudeResetCredits = nil // Live-only inventory; a reset used on claude.ai must not reappear.
         self.mistralUsage = try container.decodeIfPresent(MistralUsageSnapshot.self, forKey: .mistralUsage)
         self.copilotMeteredZeroCredits = try container
@@ -584,6 +589,7 @@ public struct UsageSnapshot: Codable, Sendable {
         browserSessionOwner: Replacement<ProviderBrowserSessionOwner?> = .unchanged,
         codexResetCredits: Replacement<CodexRateLimitResetCreditsSnapshot?> = .unchanged,
         grokResetCredits: Replacement<GrokRateLimitResetCreditsSnapshot?> = .unchanged,
+        grokBotCredentialScope: Replacement<String?> = .unchanged,
         subscriptionExpiresAt: Replacement<Date?> = .unchanged,
         subscriptionRenewsAt: Replacement<Date?> = .unchanged,
         subscriptionRenewsAtIsDateOnly: Replacement<Bool> = .unchanged,
@@ -607,6 +613,7 @@ public struct UsageSnapshot: Codable, Sendable {
             openAIAPIUsage: self.openAIAPIUsage,
             codexResetCredits: codexResetCredits.resolving(self.codexResetCredits),
             grokResetCredits: grokResetCredits.resolving(self.grokResetCredits),
+            grokBotCredentialScope: grokBotCredentialScope.resolving(self.grokBotCredentialScope),
             claudeResetCredits: self.claudeResetCredits,
             mistralUsage: self.mistralUsage,
             copilotMeteredZeroCredits: self.copilotMeteredZeroCredits,

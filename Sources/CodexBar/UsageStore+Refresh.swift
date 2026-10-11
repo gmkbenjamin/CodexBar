@@ -73,6 +73,8 @@ extension UsageStore {
     }
 
     func prepareRefreshState(for provider: UsageProvider? = nil) {
+        // Provider-specific by design: Grok clears linked Cursor readings; Codex reconciles managed-profile state.
+        if provider == nil || provider == .grok { self.reconcileGrokBotUsageOwnership() }
         // Provider-specific by design: Codex active-source correction reconciles managed profile filesystem state.
         guard provider == nil || provider == .codex else { return }
         _ = self.settings.persistResolvedCodexActiveSourceCorrectionIfNeeded()
@@ -122,6 +124,7 @@ extension UsageStore {
             tokenCostScopeSignature: Self.tokenCostRequiresProviderSnapshot(provider)
                 ? self.tokenSnapshotScopeSignature(for: provider)
                 : nil,
+            linkedCredentialScopeSignature: self.linkedCredentialScopeSignature(for: provider),
             allowDisabled: allowDisabled)
         let task = Task { @MainActor [weak self] in
             guard let self else { return }
@@ -143,6 +146,7 @@ extension UsageStore {
                     tokenCostScopeSignature: Self.tokenCostRequiresProviderSnapshot(provider)
                         ? self.tokenSnapshotScopeSignature(for: provider)
                         : nil,
+                    linkedCredentialScopeSignature: self.linkedCredentialScopeSignature(for: provider),
                     allowDisabled: allowDisabled)
                 snapshotUpdatedAtBeforeRefresh = self.snapshot(for: provider.instanceID)?.updatedAt
                 didStartRefresh = true
@@ -179,6 +183,7 @@ extension UsageStore {
         }
         return context.enablementRevision == self.settings.providerEnablementRevision(for: provider) &&
             context.configRevision == self.settings.providerConfigRevision(for: provider) &&
+            context.linkedCredentialScopeSignature == self.linkedCredentialScopeSignature(for: provider) &&
             (context.tokenCostScopeSignature == nil ||
                 context.tokenCostScopeSignature == self.tokenSnapshotScopeSignature(for: provider))
     }
@@ -1491,10 +1496,7 @@ extension UsageStore {
         account: ProviderTokenAccount?) -> TokenAccountUsageSnapshot?
     {
         guard let account else { return nil }
-        return self.accountSnapshots[provider.instanceID]?.first { cached in
-            cached.account.id == account.id &&
-                cached.cacheKey == self.tokenAccountSnapshotCacheKey(provider: provider, account: account)
-        }
+        return self.validTokenAccountSnapshots(provider: provider, accounts: [account]).first
     }
 
     nonisolated static func isPreservableNetworkTransportError(_ error: Error) -> Bool {

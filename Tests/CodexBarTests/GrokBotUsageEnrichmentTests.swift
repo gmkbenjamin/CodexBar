@@ -82,11 +82,16 @@ struct GrokBotUsageEnrichmentTests {
         }
     }
 
-    @Test
-    func `explicit Cursor Off remains authoritative over automatic Bot routing`() async throws {
+    @Test(arguments: [ProviderCookieSource.off, .manual])
+    func `explicit Cursor Off remains authoritative over automatic or saved account routing`(
+        resolvedSource: ProviderCookieSource) async throws
+    {
         await #expect(throws: CursorStatusProbeError.self) {
             try await GrokBotUsageEnrichment.fetchBotUsage(
-                Self.context(enabled: true, cursorSource: .off, botCursorSource: .auto),
+                Self.context(
+                    enabled: true,
+                    cursorSource: resolvedSource,
+                    botCursorSource: resolvedSource == .off ? .auto : .off),
                 makeProbe: {
                     Issue.record("Explicit Off must prevent probe creation")
                     return CursorStatusProbe(browserDetection: BrowserDetection(cacheTTL: 0))
@@ -116,22 +121,35 @@ struct GrokBotUsageEnrichmentTests {
         }
         #expect(result.usage.primary?.usedPercent == 23)
         #expect(result.usage.extraRateWindows?.first?.usageKnown == false)
-        #expect(result.diagnostic == "Existing Grok diagnostic Grok Bot lookup timed out.")
+        #expect(result.diagnostic == "Existing Grok diagnostic Grok Bot lookup timed out. Try refreshing again.")
     }
 
-    @Test
-    func `Bot failures report safe HTTP diagnostics without exposing response contents`() async throws {
+    @Test(arguments: [429, 500])
+    func `Bot failures report safe HTTP diagnostics without exposing response contents`(status: Int) async throws {
         let serverFailure = GrokBotUsageEnrichment(base: StubStrategy(result: .success(Self.grokResult()))) { _ in
-            throw CursorStatusProbeError.networkError("HTTP 429")
+            throw CursorStatusProbeError.networkError("HTTP \(status)")
         }
         let serverResult = try await serverFailure.fetch(Self.context(enabled: true))
-        #expect(serverResult.diagnostic == "Existing Grok diagnostic Grok Bot lookup failed (HTTP 429).")
+        #expect(serverResult
+            .diagnostic == "Existing Grok diagnostic Grok Bot lookup failed (HTTP \(status)). Try refreshing again.")
         let malformed = GrokBotUsageEnrichment(base: StubStrategy(result: .success(Self.grokResult()))) { _ in
             throw CursorStatusProbeError.parseFailed("Raw: private response fixture")
         }
         let malformedResult = try await malformed.fetch(Self.context(enabled: true))
         #expect(malformedResult.diagnostic?.contains("readable allowance") == true)
+        #expect(malformedResult.diagnostic?.contains("Try refreshing again.") == true)
         #expect(malformedResult.diagnostic?.contains("private response") == false)
+    }
+
+    @Test
+    func `transport timeouts offer a retry without losing native Grok usage`() async throws {
+        let strategy = GrokBotUsageEnrichment(base: StubStrategy(result: .success(Self.grokResult()))) { _ in
+            throw URLError(.timedOut)
+        }
+        let result = try await strategy.fetch(Self.context(enabled: true))
+        #expect(result.usage.primary?.usedPercent == 23)
+        #expect(result.usage.extraRateWindows?.first?.usageKnown == false)
+        #expect(result.diagnostic == "Existing Grok diagnostic Grok Bot lookup timed out. Try refreshing again.")
     }
 
     @Test

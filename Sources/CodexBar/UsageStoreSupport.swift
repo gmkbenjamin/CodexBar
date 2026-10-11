@@ -19,6 +19,7 @@ struct ProviderRefreshPublicationContext {
     let enablementRevision: UInt64
     var configRevision: UInt64
     let tokenCostScopeSignature: String?
+    let linkedCredentialScopeSignature: String?
     let allowDisabled: Bool
 }
 

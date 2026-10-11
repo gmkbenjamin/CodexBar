@@ -11,6 +11,7 @@ struct GrokProviderImplementation: ProviderImplementation {
         _ = settings.grokCookieSource
         _ = settings.grokCookieHeader
         _ = settings.grokBotUsageEnabled
+        if settings.grokBotUsageEnabled { _ = settings.grokBotCredentialScope }
     }
 
     @MainActor
